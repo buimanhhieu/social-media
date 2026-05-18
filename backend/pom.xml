@@ -24,7 +24,7 @@
         <aws.sdk.version>2.25.0</aws.sdk.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
         <springdoc.version>2.5.0</springdoc.version>
-        <testcontainers.version>1.19.8</testcontainers.version>
+        <testcontainers.version>1.21.3</testcontainers.version>
         <lombok.version>1.18.42</lombok.version>
     </properties>
 
@@ -187,6 +187,15 @@
                             <version>${lombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <api.version>1.44</api.version>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>
