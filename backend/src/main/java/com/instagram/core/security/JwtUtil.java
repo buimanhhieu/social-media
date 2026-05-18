@@ -1,7 +1,10 @@
 package com.instagram.core.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -9,14 +12,19 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.UUID;
 
 @Slf4j
 @Component
 public class JwtUtil {
 
+    public static final String CLAIM_TYPE = "type";
+    public static final String TYPE_ACCESS = "ACCESS";
+    public static final String TYPE_REFRESH = "REFRESH";
+
     private final SecretKey secretKey;
-    private final long accessTokenExpiryMs;
-    private final long refreshTokenExpiryMs;
+    @Getter private final long accessTokenExpiryMs;
+    @Getter private final long refreshTokenExpiryMs;
 
     public JwtUtil(
             @Value("${app.jwt.secret}") String secret,
@@ -27,25 +35,54 @@ public class JwtUtil {
         this.refreshTokenExpiryMs = refreshTokenExpiryMs;
     }
 
-    public String generateAccessToken(String username) {
-        return buildToken(username, accessTokenExpiryMs);
+    public String generateAccessToken(Long userId) {
+        return buildToken(userId, UUID.randomUUID().toString(), TYPE_ACCESS, accessTokenExpiryMs);
     }
 
-    public String generateRefreshToken(String username) {
-        return buildToken(username, refreshTokenExpiryMs);
+    public IssuedToken generateRefreshToken(Long userId) {
+        String jti = UUID.randomUUID().toString();
+        String token = buildToken(userId, jti, TYPE_REFRESH, refreshTokenExpiryMs);
+        return new IssuedToken(token, jti);
     }
 
-    private String buildToken(String subject, long expiryMs) {
+    private String buildToken(Long userId, String jti, String type, long expiryMs) {
+        Date now = new Date();
         return Jwts.builder()
-                .subject(subject)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiryMs))
+                .subject(String.valueOf(userId))
+                .id(jti)
+                .claim(CLAIM_TYPE, type)
+                .issuedAt(now)
+                .expiration(new Date(now.getTime() + expiryMs))
                 .signWith(secretKey)
                 .compact();
     }
 
-    public String extractUsername(String token) {
-        return parseClaims(token).getSubject();
+    public Long extractUserId(String token) {
+        return Long.valueOf(parseClaims(token).getSubject());
+    }
+
+    public String extractJti(String token) {
+        return parseClaims(token).getId();
+    }
+
+    public String extractType(String token) {
+        return parseClaims(token).get(CLAIM_TYPE, String.class);
+    }
+
+    public boolean isAccess(String token) {
+        try {
+            return TYPE_ACCESS.equals(extractType(token));
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    public boolean isRefresh(String token) {
+        try {
+            return TYPE_REFRESH.equals(extractType(token));
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 
     public boolean isValid(String token) {
@@ -53,7 +90,7 @@ public class JwtUtil {
             parseClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            log.debug("Invalid JWT token: {}", e.getMessage());
+            log.debug("Invalid JWT: {}", e.getMessage());
             return false;
         }
     }
@@ -65,4 +102,6 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload();
     }
+
+    public record IssuedToken(String token, String jti) {}
 }

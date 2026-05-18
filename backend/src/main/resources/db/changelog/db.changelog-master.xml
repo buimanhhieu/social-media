@@ -11,6 +11,7 @@
     <!-- Thứ tự quan trọng: module ít phụ thuộc chạy trước -->
     <include file="db/changelog/user/001_create_users.sql"/>
     <include file="db/changelog/user/002_create_follows.sql"/>
+    <include file="db/changelog/user/003_add_last_password_change.sql"/>
     <include file="db/changelog/media/001_create_media_files.sql"/>
     <include file="db/changelog/post/001_create_posts.sql"/>
     <include file="db/changelog/post/002_create_likes_comments.sql"/>

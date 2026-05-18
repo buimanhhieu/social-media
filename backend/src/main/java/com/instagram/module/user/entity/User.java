@@ -4,6 +4,8 @@ import com.instagram.core.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
+
 @Entity
 @Table(name = "users", schema = "user_schema")
 @Getter
@@ -39,4 +41,7 @@ public class User extends BaseEntity {
 
     @Column(name = "is_verified", nullable = false)
     private boolean isVerified = false;
+
+    @Column(name = "last_password_change_at")
+    private Instant lastPasswordChangeAt;
 }
