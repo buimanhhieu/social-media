@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <!-- Tạo schemas trước -->
+    <include file="db/changelog/000_create_schemas.sql"/>
+
+    <!-- Thứ tự quan trọng: module ít phụ thuộc chạy trước -->
+    <include file="db/changelog/user/001_create_users.sql"/>
+    <include file="db/changelog/user/002_create_follows.sql"/>
+    <include file="db/changelog/media/001_create_media_files.sql"/>
+    <include file="db/changelog/post/001_create_posts.sql"/>
+    <include file="db/changelog/post/002_create_likes_comments.sql"/>
+    <include file="db/changelog/story/001_create_stories.sql"/>
+    <include file="db/changelog/chat/001_create_chat.sql"/>
+    <include file="db/changelog/notification/001_create_notifications.sql"/>
+
+</databaseChangeLog>

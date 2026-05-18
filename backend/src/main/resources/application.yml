@@ -1,0 +1,75 @@
+spring:
+  application:
+    name: instagram-clone
+
+  profiles:
+    active: dev
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:instagram_db}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        default_schema: public
+    show-sql: false
+    open-in-view: false
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 110MB
+
+  async:
+    executor:
+      core-pool-size: 4
+      max-pool-size: 10
+      queue-capacity: 100
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:change-me-in-production-must-be-at-least-256-bits-long}
+    access-token-expiry-ms: 900000       # 15 phút
+    refresh-token-expiry-ms: 2592000000  # 30 ngày
+
+  storage:
+    provider: ${STORAGE_PROVIDER:minio}  # s3 | minio
+    bucket: ${STORAGE_BUCKET:instagram-clone}
+    cdn-url: ${CDN_URL:http://localhost:9000/instagram-clone}
+
+  cors:
+    allowed-origins:
+      - http://localhost:5173             # Vite dev server
+      - http://localhost:3000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
