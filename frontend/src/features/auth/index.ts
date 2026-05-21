@@ -1,5 +1,6 @@
 export { LoginForm } from './components/LoginForm';
 export { RegisterForm } from './components/RegisterForm';
+export { VerifyEmailForm } from './components/VerifyEmailForm';
 export {
   useRegister,
   useResendRegisterOtp,
