@@ -7,12 +7,6 @@ spring:
   liquibase:
     enabled: false        # dev: dùng ddl-auto thay Liquibase
 
-# MinIO local
-minio:
-  endpoint: http://localhost:9000
-  access-key: minioadmin
-  secret-key: minioadmin
-
 logging:
   level:
     com.instagram: DEBUG

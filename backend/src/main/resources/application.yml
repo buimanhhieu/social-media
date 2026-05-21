@@ -68,9 +68,11 @@ app:
     refresh-token-expiry-ms: 2592000000  # 30 ngày
 
   storage:
-    provider: ${STORAGE_PROVIDER:minio}  # s3 | minio
     bucket: ${STORAGE_BUCKET:instagram-clone}
-    cdn-url: ${CDN_URL:http://localhost:9000/instagram-clone}
+    cdn-url: ${CDN_URL:}                  # CDN (CloudFront…); để trống sẽ dùng URL S3 mặc định
+    region: ${AWS_REGION:ap-southeast-1}
+    access-key: ${AWS_ACCESS_KEY:}
+    secret-key: ${AWS_SECRET_KEY:}
 
   cors:
     allowed-origins:
