@@ -1,4 +1,4 @@
-import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { env } from '@shared/config/env';
 import type { ApiError } from './types';
 
