@@ -2,6 +2,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update    # dev: tự update schema
+    properties:
+      hibernate:
+        hbm2ddl:
+          create_namespaces: true   # tự CREATE SCHEMA cho user_schema, post_schema, …
     show-sql: true
 
   liquibase:
