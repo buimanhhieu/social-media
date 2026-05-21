@@ -1,33 +1,33 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { tokenStorage } from '@shared/api/axios';
 import { authApi } from './endpoints';
 import { useAuthStore } from '../stores/auth.store';
+import type { AuthTokens } from '../types';
 
-export const authKeys = {
-  me: ['auth', 'me'] as const,
-};
+function storeTokens(tokens: AuthTokens) {
+  tokenStorage.set(tokens.accessToken, tokens.refreshToken);
+  useAuthStore.getState().setAccessToken(tokens.accessToken);
+}
 
-export function useCurrentUser() {
-  const accessToken = useAuthStore((s) => s.accessToken);
-  return useQuery({
-    queryKey: authKeys.me,
-    queryFn: authApi.me,
-    enabled: !!accessToken,
-    staleTime: 5 * 60_000,
+export function useRegister() {
+  return useMutation({ mutationFn: authApi.register });
+}
+
+export function useResendRegisterOtp() {
+  return useMutation({ mutationFn: authApi.resendRegisterOtp });
+}
+
+export function useVerifyEmail() {
+  return useMutation({
+    mutationFn: authApi.verifyEmail,
+    onSuccess: storeTokens,
   });
 }
 
 export function useLogin() {
-  const qc = useQueryClient();
-  const setAuth = useAuthStore((s) => s.setAuth);
-
   return useMutation({
     mutationFn: authApi.login,
-    onSuccess: (data) => {
-      tokenStorage.set(data.accessToken, data.refreshToken);
-      setAuth(data.accessToken, data.user);
-      qc.setQueryData(authKeys.me, data.user);
-    },
+    onSuccess: storeTokens,
   });
 }
 
@@ -36,11 +36,26 @@ export function useLogout() {
   const clear = useAuthStore((s) => s.clear);
 
   return useMutation({
-    mutationFn: authApi.logout,
+    mutationFn: async () => {
+      const refresh = tokenStorage.getRefresh();
+      if (refresh) await authApi.logout(refresh);
+    },
     onSettled: () => {
       tokenStorage.clear();
       clear();
       qc.clear();
     },
   });
+}
+
+export function useForgotPasswordRequestOtp() {
+  return useMutation({ mutationFn: authApi.forgotPasswordRequestOtp });
+}
+
+export function useForgotPasswordVerifyOtp() {
+  return useMutation({ mutationFn: authApi.forgotPasswordVerifyOtp });
+}
+
+export function useForgotPasswordReset() {
+  return useMutation({ mutationFn: authApi.forgotPasswordReset });
 }
