@@ -24,64 +24,12 @@ pnpm-debug.log*
 .env.*
 !.env.example
 
-# OS / temp
-*.swp
-*.tmp
-# macOS
-.DS_Store
+# Claude Code config (personal, do not push)
+.claude/
 
-# IntelliJ / Java
-.idea/
-*.iml
-out/
-target/
-build/
-.gradle/
-*.log
-
-# Node / React
-node_modules/
-dist/
-.vite/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Env / secrets (NEVER COMMIT)
-.env
-.env.*
-!.env.example
-
-# OS / temp
-*.swp
-*.tmp# macOS
-.DS_Store
-
-# IntelliJ / Java
-.idea/
-*.iml
-out/
-target/
-build/
-.gradle/
-*.log
-
-# Node / React
-node_modules/
-dist/
-.vite/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Env / secrets (NEVER COMMIT)
-.env
-.env.*
-!.env.example
+# Markdown docs (kept local only)
+*.md
 
 # OS / temp
 *.swp
 *.tmp
-
