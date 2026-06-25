@@ -10,7 +10,15 @@ export interface UserProfile extends UserSummary {
   websiteUrl: string | null;
   isPrivate: boolean;
   isVerified: boolean;
-  followerCount: number;
+  followersCount: number;
   followingCount: number;
-  postCount: number;
+  isFollowing: boolean;
+}
+
+export interface UpdateProfileRequest {
+  displayName?: string;
+  bio?: string;
+  websiteUrl?: string;
+  avatarUrl?: string;
+  isPrivate?: boolean;
 }
