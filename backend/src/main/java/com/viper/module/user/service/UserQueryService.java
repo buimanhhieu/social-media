@@ -11,8 +11,14 @@ public interface UserQueryService {
     UserSummary getUserSummaryByUsername(String username);
     boolean existsById(Long userId);
 
-    /** Hồ sơ đầy đủ kèm số người theo dõi/đang theo dõi (cho trang cá nhân). */
-    UserProfileResponse getProfile(Long userId);
+    /** Hồ sơ đầy đủ kèm số follower/following; {@code viewerId} để tính isFollowing. */
+    UserProfileResponse getProfile(Long userId, Long viewerId);
+
+    /** Hồ sơ theo username (xem trang người khác). */
+    UserProfileResponse getProfileByUsername(String username, Long viewerId);
+
+    /** Gợi ý người để theo dõi (loại bản thân + người đã theo dõi). */
+    List<UserSummary> getSuggestions(Long viewerId, int limit);
 
     /** Lấy nhiều summary một lần (tránh N+1 khi dựng feed/danh sách). */
     List<UserSummary> getUserSummariesByIds(List<Long> ids);

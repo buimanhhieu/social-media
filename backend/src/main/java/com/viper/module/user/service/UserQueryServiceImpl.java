@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,15 +46,38 @@ public class UserQueryServiceImpl implements UserQueryService {
     }
 
     @Override
-    public UserProfileResponse getProfile(Long userId) {
+    public UserProfileResponse getProfile(Long userId, Long viewerId) {
         User u = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId));
-        long followers = followRepository.countByFollowingId(userId);
-        long following = followRepository.countByFollowerId(userId);
+        return buildProfile(u, viewerId);
+    }
+
+    @Override
+    public UserProfileResponse getProfileByUsername(String username, Long viewerId) {
+        User u = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+        return buildProfile(u, viewerId);
+    }
+
+    @Override
+    public List<UserSummary> getSuggestions(Long viewerId, int limit) {
+        List<Long> excluded = new ArrayList<>(followRepository.findFollowingIdsByUserId(viewerId));
+        excluded.add(viewerId);
+        return userRepository.findTop12ByIdNotInAndIsVerifiedTrueOrderByCreatedAtDesc(excluded).stream()
+                .limit(limit)
+                .map(u -> new UserSummary(u.getId(), u.getUsername(), u.getDisplayName(), u.getAvatarUrl()))
+                .toList();
+    }
+
+    private UserProfileResponse buildProfile(User u, Long viewerId) {
+        long followers = followRepository.countByFollowingId(u.getId());
+        long following = followRepository.countByFollowerId(u.getId());
+        boolean isFollowing = viewerId != null && !viewerId.equals(u.getId())
+                && followRepository.existsByFollowerIdAndFollowingId(viewerId, u.getId());
         return new UserProfileResponse(
                 u.getId(), u.getUsername(), u.getDisplayName(), u.getBio(),
                 u.getAvatarUrl(), u.getWebsiteUrl(), u.isPrivate(), u.isVerified(),
-                followers, following, false);
+                followers, following, isFollowing);
     }
 
     @Override
