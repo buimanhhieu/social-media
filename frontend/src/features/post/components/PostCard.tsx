@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Heart, MapPin, MessageCircle } from 'lucide-react';
 import { Avatar } from '@shared/ui/Avatar';
 import { cn } from '@shared/lib/cn';
@@ -13,6 +13,12 @@ export function PostCard({ post }: { post: PostResponse }) {
   const [showComments, setShowComments] = useState(false);
   const like = useLikePost();
   const unlike = useUnlikePost();
+
+  // Đồng bộ lại theo server khi feed refetch (vd sau khi thêm bình luận).
+  useEffect(() => {
+    setLiked(post.likedByMe);
+    setLikeCount(post.likeCount);
+  }, [post.likedByMe, post.likeCount]);
 
   const author = post.author;
   const cover = post.media[0];

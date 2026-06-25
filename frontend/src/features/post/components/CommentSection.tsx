@@ -4,7 +4,10 @@ import { timeAgo } from '@shared/lib/timeAgo';
 import { usePostComments, useAddComment } from '../api/hooks';
 
 export function CommentSection({ postId }: { postId: number }) {
-  const { data, isLoading } = usePostComments(postId, true);
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = usePostComments(
+    postId,
+    true,
+  );
   const add = useAddComment(postId);
   const [text, setText] = useState('');
 
@@ -15,7 +18,7 @@ export function CommentSection({ postId }: { postId: number }) {
     add.mutate({ content }, { onSuccess: () => setText('') });
   };
 
-  const comments = data?.content ?? [];
+  const comments = data?.pages.flatMap((p) => p.content) ?? [];
 
   return (
     <div className="border-t border-zinc-100 dark:border-zinc-800">
@@ -37,6 +40,18 @@ export function CommentSection({ postId }: { postId: number }) {
               </div>
             </li>
           ))}
+          {hasNextPage && (
+            <li>
+              <button
+                type="button"
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="text-sm text-zinc-500 hover:underline disabled:opacity-50"
+              >
+                {isFetchingNextPage ? 'Đang tải…' : 'Xem thêm bình luận'}
+              </button>
+            </li>
+          )}
         </ul>
       )}
 

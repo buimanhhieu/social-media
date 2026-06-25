@@ -1,4 +1,4 @@
-import { type ChangeEvent, type FormEvent, useRef, useState } from 'react';
+import { type ChangeEvent, type FormEvent, useEffect, useRef, useState } from 'react';
 import { ImagePlus, X } from 'lucide-react';
 import { Button } from '@shared/ui/Button';
 import { Input } from '@shared/ui/Input';
@@ -16,6 +16,11 @@ export function CreatePostForm({ onCreated }: { onCreated?: () => void }) {
   const upload = useUploadMedia();
   const create = useCreatePost();
   const busy = upload.isPending || create.isPending;
+
+  // Giải phóng object URL của ảnh xem trước khi rời trang.
+  useEffect(() => () => {
+    if (preview) URL.revokeObjectURL(preview);
+  }, [preview]);
 
   const pickFile = (f: File) => {
     if (!f.type.startsWith('image/')) {

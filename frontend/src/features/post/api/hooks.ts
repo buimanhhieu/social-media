@@ -1,9 +1,4 @@
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { commentApi, mediaApi, postApi } from './endpoints';
 import type { CreateCommentRequest, CreatePostRequest } from '../types';
 
@@ -39,9 +34,11 @@ export function useUnlikePost() {
 }
 
 export function usePostComments(postId: number, enabled: boolean) {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ['comments', postId],
-    queryFn: () => commentApi.list(postId),
+    initialPageParam: 0,
+    queryFn: ({ pageParam }) => commentApi.list(postId, pageParam, 20),
+    getNextPageParam: (last) => (last.last ? undefined : last.page + 1),
     enabled,
   });
 }
