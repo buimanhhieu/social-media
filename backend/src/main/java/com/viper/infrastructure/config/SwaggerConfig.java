@@ -15,7 +15,7 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Viper Chat API")
+                        .title("Viper Study API")
                         .description("Modular Monolith — Spring Boot + PostgreSQL")
                         .version("1.0.0"))
                 .addSecurityItem(new SecurityRequirement().addList("Bearer"))

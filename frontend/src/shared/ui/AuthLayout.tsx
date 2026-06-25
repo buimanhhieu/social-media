@@ -26,7 +26,7 @@ export function AuthLayout({ title, subtitle, children, footer }: AuthLayoutProp
           </p>
         </div>
 
-        <p className="relative z-10 text-sm text-white/60">© 2026 Viper Chat</p>
+        <p className="relative z-10 text-sm text-white/60">© 2026 Viper Study</p>
 
         {/* soft light overlays for depth */}
         <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-white/20 blur-3xl" />
@@ -62,7 +62,7 @@ export function AuthLayout({ title, subtitle, children, footer }: AuthLayoutProp
           </div>
 
           <p className="mt-6 text-center text-xs leading-relaxed text-zinc-400 dark:text-zinc-600">
-            Bằng việc tiếp tục, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của Viper Chat.
+            Bằng việc tiếp tục, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của Viper Study.
           </p>
         </div>
       </section>

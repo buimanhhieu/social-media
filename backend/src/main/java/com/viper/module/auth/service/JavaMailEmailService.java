@@ -15,7 +15,7 @@ public class JavaMailEmailService implements EmailService {
 
     private final JavaMailSender mailSender;
 
-    @Value("${spring.mail.username:no-reply@viper-chat.local}")
+    @Value("${spring.mail.username:no-reply@viper-study.local}")
     private String fromAddress;
 
     @Async

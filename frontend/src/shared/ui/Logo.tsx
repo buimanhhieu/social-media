@@ -15,7 +15,7 @@ export function Logo({ tone = 'gradient', className }: LogoProps) {
         className,
       )}
     >
-      Viper Chat
+      Viper Study
     </span>
   );
 }

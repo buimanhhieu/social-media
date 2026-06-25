@@ -13,10 +13,10 @@
     </parent>
 
     <groupId>com.viper</groupId>
-    <artifactId>viper-chat</artifactId>
+    <artifactId>viper-study</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>viper-chat</name>
-    <description>Viper Chat — Modular Monolith</description>
+    <name>viper-study</name>
+    <description>Viper Study — Modular Monolith</description>
 
     <properties>
         <java.version>21</java.version>
