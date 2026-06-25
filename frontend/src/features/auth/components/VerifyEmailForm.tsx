@@ -33,23 +33,23 @@ export function VerifyEmailForm({ email, onSuccess }: VerifyEmailFormProps) {
   });
 
   const onResend = () => {
-    resend.mutate(
-      { email },
-      { onSuccess: () => setCooldown(RESEND_COOLDOWN_SECONDS) },
-    );
+    resend.mutate({ email }, { onSuccess: () => setCooldown(RESEND_COOLDOWN_SECONDS) });
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-3">
-      <p className="text-sm text-zinc-600">
-        Mã OTP đã được gửi đến <strong>{email}</strong>.
+    <form onSubmit={onSubmit} className="flex flex-col gap-4">
+      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        Mã OTP đã được gửi đến{' '}
+        <strong className="font-semibold text-zinc-700 dark:text-zinc-200">{email}</strong>.
       </p>
 
       <Input
+        label="Mã OTP"
         inputMode="numeric"
         maxLength={6}
-        placeholder="Nhập mã OTP 6 chữ số"
+        placeholder="000000"
         autoComplete="one-time-code"
+        className="text-center text-lg tracking-[0.5em]"
         error={formState.errors.otp?.message}
         {...register('otp', {
           required: 'Bắt buộc',
@@ -58,16 +58,22 @@ export function VerifyEmailForm({ email, onSuccess }: VerifyEmailFormProps) {
       />
 
       {verify.isError && (
-        <p className="text-sm text-red-600">{getFriendlyMessage(verify.error)}</p>
+        <p className="text-sm text-red-600 dark:text-red-400">
+          {getFriendlyMessage(verify.error)}
+        </p>
       )}
       {resend.isSuccess && cooldown > 0 && (
-        <p className="text-sm text-green-600">Đã gửi lại OTP. Vui lòng kiểm tra hộp thư.</p>
+        <p className="text-sm text-emerald-600 dark:text-emerald-400">
+          Đã gửi lại OTP. Vui lòng kiểm tra hộp thư.
+        </p>
       )}
       {resend.isError && (
-        <p className="text-sm text-red-600">{getFriendlyMessage(resend.error)}</p>
+        <p className="text-sm text-red-600 dark:text-red-400">
+          {getFriendlyMessage(resend.error)}
+        </p>
       )}
 
-      <Button type="submit" disabled={verify.isPending}>
+      <Button type="submit" fullWidth disabled={verify.isPending}>
         {verify.isPending ? 'Đang xác thực…' : 'Xác thực'}
       </Button>
 
@@ -75,7 +81,7 @@ export function VerifyEmailForm({ email, onSuccess }: VerifyEmailFormProps) {
         type="button"
         onClick={onResend}
         disabled={resend.isPending || cooldown > 0}
-        className="text-sm text-blue-600 hover:underline disabled:cursor-not-allowed disabled:text-zinc-400"
+        className="text-sm font-medium text-accent hover:underline disabled:cursor-not-allowed disabled:text-zinc-400 dark:disabled:text-zinc-600"
       >
         {cooldown > 0 ? `Gửi lại OTP sau ${cooldown}s` : 'Gửi lại OTP'}
       </button>

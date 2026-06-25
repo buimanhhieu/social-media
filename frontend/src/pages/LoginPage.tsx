@@ -1,33 +1,34 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { LoginForm } from '@features/auth';
+import { AuthLayout } from '@shared/ui/AuthLayout';
 
 export function LoginPage() {
   const navigate = useNavigate();
 
   return (
-    <main className="flex min-h-full items-center justify-center p-6">
-      <div className="w-full max-w-sm rounded-lg border border-zinc-200 bg-white p-8 shadow-sm">
-        <h1 className="mb-6 text-center text-xl font-semibold">Đăng nhập</h1>
-
-        <LoginForm
-          onSuccess={() => navigate('/')}
-          onEmailNotVerified={(email) =>
-            navigate(`/verify-email?email=${encodeURIComponent(email)}`)
-          }
-        />
-
-        <div className="mt-4 flex flex-col gap-1 text-center text-sm">
-          <Link to="/forgot-password" className="text-blue-600 hover:underline">
+    <AuthLayout
+      title="Đăng nhập"
+      subtitle="Chào mừng trở lại. Nhập thông tin để tiếp tục."
+      footer={
+        <div className="flex flex-col items-center gap-2 text-center">
+          <Link to="/forgot-password" className="font-medium text-accent hover:underline">
             Quên mật khẩu?
           </Link>
-          <span className="text-zinc-600">
+          <span>
             Chưa có tài khoản?{' '}
-            <Link to="/register" className="text-blue-600 hover:underline">
+            <Link to="/register" className="font-semibold text-accent hover:underline">
               Đăng ký
             </Link>
           </span>
         </div>
-      </div>
-    </main>
+      }
+    >
+      <LoginForm
+        onSuccess={() => navigate('/')}
+        onEmailNotVerified={(email) =>
+          navigate(`/verify-email?email=${encodeURIComponent(email)}`)
+        }
+      />
+    </AuthLayout>
   );
 }

@@ -25,16 +25,18 @@ export function RegisterForm({ onSuccess }: { onSuccess?: (email: string) => voi
   });
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-3">
+    <form onSubmit={onSubmit} className="flex flex-col gap-4">
       <Input
         type="email"
-        placeholder="Email"
+        label="Email"
+        placeholder="ban@email.com"
         autoComplete="email"
         error={formState.errors.email?.message}
         {...register('email', { required: 'Bắt buộc' })}
       />
       <Input
-        placeholder="Username"
+        label="Tên người dùng"
+        placeholder="ten_nguoi_dung"
         autoComplete="username"
         error={formState.errors.username?.message}
         {...register('username', {
@@ -46,7 +48,8 @@ export function RegisterForm({ onSuccess }: { onSuccess?: (email: string) => voi
         })}
       />
       <Input
-        placeholder="Tên hiển thị (tuỳ chọn)"
+        label="Tên hiển thị"
+        hint="Tuỳ chọn"
         autoComplete="name"
         maxLength={60}
         error={formState.errors.displayName?.message}
@@ -54,7 +57,8 @@ export function RegisterForm({ onSuccess }: { onSuccess?: (email: string) => voi
       />
       <Input
         type="password"
-        placeholder="Mật khẩu"
+        label="Mật khẩu"
+        placeholder="••••••••"
         autoComplete="new-password"
         error={formState.errors.password?.message}
         {...register('password', {
@@ -65,10 +69,12 @@ export function RegisterForm({ onSuccess }: { onSuccess?: (email: string) => voi
       />
 
       {registerMutation.isError && (
-        <p className="text-sm text-red-600">{getFriendlyMessage(registerMutation.error)}</p>
+        <p className="text-sm text-red-600 dark:text-red-400">
+          {getFriendlyMessage(registerMutation.error)}
+        </p>
       )}
 
-      <Button type="submit" disabled={registerMutation.isPending}>
+      <Button type="submit" fullWidth disabled={registerMutation.isPending}>
         {registerMutation.isPending ? 'Đang tạo tài khoản…' : 'Đăng ký'}
       </Button>
     </form>

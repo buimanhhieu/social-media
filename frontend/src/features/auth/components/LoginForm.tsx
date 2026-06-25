@@ -29,17 +29,19 @@ export function LoginForm({ onSuccess, onEmailNotVerified }: LoginFormProps) {
   const isEmailNotVerified = apiCode === 'EMAIL_NOT_VERIFIED';
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-3">
+    <form onSubmit={onSubmit} className="flex flex-col gap-4">
       <Input
         type="email"
-        placeholder="Email"
+        label="Email"
+        placeholder="ban@email.com"
         autoComplete="email"
         error={formState.errors.email?.message}
         {...register('email', { required: 'Bắt buộc' })}
       />
       <Input
         type="password"
-        placeholder="Mật khẩu"
+        label="Mật khẩu"
+        placeholder="••••••••"
         autoComplete="current-password"
         error={formState.errors.password?.message}
         {...register('password', { required: 'Bắt buộc' })}
@@ -47,11 +49,11 @@ export function LoginForm({ onSuccess, onEmailNotVerified }: LoginFormProps) {
 
       {login.isError && (
         <div className="flex flex-col gap-1 text-sm">
-          <p className="text-red-600">{getFriendlyMessage(login.error)}</p>
+          <p className="text-red-600 dark:text-red-400">{getFriendlyMessage(login.error)}</p>
           {isEmailNotVerified && (
             <button
               type="button"
-              className="self-start text-blue-600 hover:underline"
+              className="self-start font-medium text-accent hover:underline"
               onClick={() => onEmailNotVerified?.(getValues('email'))}
             >
               Đi tới xác thực email →
@@ -60,7 +62,7 @@ export function LoginForm({ onSuccess, onEmailNotVerified }: LoginFormProps) {
         </div>
       )}
 
-      <Button type="submit" disabled={login.isPending}>
+      <Button type="submit" fullWidth disabled={login.isPending}>
         {login.isPending ? 'Đang đăng nhập…' : 'Đăng nhập'}
       </Button>
     </form>

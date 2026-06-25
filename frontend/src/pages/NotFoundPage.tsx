@@ -1,12 +1,20 @@
 import { Link } from 'react-router-dom';
+import { Button } from '@shared/ui/Button';
 
 export function NotFoundPage() {
   return (
-    <main className="flex min-h-full flex-col items-center justify-center gap-4 p-8 text-center">
-      <h1 className="text-4xl font-semibold">404</h1>
-      <p className="text-sm text-zinc-600">Trang bạn tìm không tồn tại.</p>
-      <Link to="/" className="text-sm text-blue-600 hover:underline">
-        Quay về trang chủ
+    <main className="flex min-h-dvh flex-col items-center justify-center gap-6 bg-zinc-50 px-6 text-center dark:bg-zinc-950">
+      <p className="brand-text-gradient text-7xl font-extrabold tracking-tight">404</p>
+      <div className="space-y-1">
+        <h1 className="text-xl font-semibold text-zinc-900 dark:text-white">
+          Không tìm thấy trang
+        </h1>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          Trang bạn tìm không tồn tại hoặc đã được di chuyển.
+        </p>
+      </div>
+      <Link to="/">
+        <Button>Về trang chủ</Button>
       </Link>
     </main>
   );

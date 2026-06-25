@@ -43,7 +43,7 @@ export function ForgotPasswordFlow({ onDone }: { onDone?: () => void }) {
       );
     case 'done':
       return (
-        <p className="text-sm text-green-600">
+        <p className="text-sm text-emerald-600 dark:text-emerald-400">
           Mật khẩu đã được cập nhật. Bạn có thể đăng nhập lại.
         </p>
       );
@@ -59,21 +59,24 @@ function RequestStep({ onNext }: { onNext: (email: string) => void }) {
   });
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-3">
-      <p className="text-sm text-zinc-600">
+    <form onSubmit={onSubmit} className="flex flex-col gap-4">
+      <p className="text-sm text-zinc-500 dark:text-zinc-400">
         Nhập email tài khoản — nếu tồn tại, chúng tôi sẽ gửi mã OTP.
       </p>
       <Input
         type="email"
-        placeholder="Email"
+        label="Email"
+        placeholder="ban@email.com"
         autoComplete="email"
         error={formState.errors.email?.message}
         {...register('email', { required: 'Bắt buộc' })}
       />
       {request.isError && (
-        <p className="text-sm text-red-600">{getFriendlyMessage(request.error)}</p>
+        <p className="text-sm text-red-600 dark:text-red-400">
+          {getFriendlyMessage(request.error)}
+        </p>
       )}
-      <Button type="submit" disabled={request.isPending}>
+      <Button type="submit" fullWidth disabled={request.isPending}>
         {request.isPending ? 'Đang gửi…' : 'Gửi OTP'}
       </Button>
     </form>
@@ -93,22 +96,22 @@ function VerifyStep({
   const { register, handleSubmit, formState } = useForm<{ otp: string }>();
 
   const onSubmit = handleSubmit((values) => {
-    verify.mutate(
-      { email, otp: values.otp },
-      { onSuccess: (data) => onNext(data.resetToken) },
-    );
+    verify.mutate({ email, otp: values.otp }, { onSuccess: (data) => onNext(data.resetToken) });
   });
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-3">
-      <p className="text-sm text-zinc-600">
-        Mã OTP đã gửi đến <strong>{email}</strong>.
+    <form onSubmit={onSubmit} className="flex flex-col gap-4">
+      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        Mã OTP đã gửi đến{' '}
+        <strong className="font-semibold text-zinc-700 dark:text-zinc-200">{email}</strong>.
       </p>
       <Input
+        label="Mã OTP"
         inputMode="numeric"
         maxLength={6}
-        placeholder="Nhập mã OTP 6 chữ số"
+        placeholder="000000"
         autoComplete="one-time-code"
+        className="text-center text-lg tracking-[0.5em]"
         error={formState.errors.otp?.message}
         {...register('otp', {
           required: 'Bắt buộc',
@@ -116,15 +119,17 @@ function VerifyStep({
         })}
       />
       {verify.isError && (
-        <p className="text-sm text-red-600">{getFriendlyMessage(verify.error)}</p>
+        <p className="text-sm text-red-600 dark:text-red-400">
+          {getFriendlyMessage(verify.error)}
+        </p>
       )}
-      <Button type="submit" disabled={verify.isPending}>
+      <Button type="submit" fullWidth disabled={verify.isPending}>
         {verify.isPending ? 'Đang xác thực…' : 'Xác thực'}
       </Button>
       <button
         type="button"
         onClick={onBack}
-        className="text-sm text-blue-600 hover:underline"
+        className="text-sm font-medium text-accent hover:underline"
       >
         ← Đổi email
       </button>
@@ -132,13 +137,7 @@ function VerifyStep({
   );
 }
 
-function ResetStep({
-  resetToken,
-  onDone,
-}: {
-  resetToken: string;
-  onDone: () => void;
-}) {
+function ResetStep({ resetToken, onDone }: { resetToken: string; onDone: () => void }) {
   const reset = useForgotPasswordReset();
   const { register, handleSubmit, formState, watch } = useForm<{
     newPassword: string;
@@ -146,17 +145,15 @@ function ResetStep({
   }>();
 
   const onSubmit = handleSubmit((values) => {
-    reset.mutate(
-      { resetToken, newPassword: values.newPassword },
-      { onSuccess: () => onDone() },
-    );
+    reset.mutate({ resetToken, newPassword: values.newPassword }, { onSuccess: () => onDone() });
   });
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-3">
+    <form onSubmit={onSubmit} className="flex flex-col gap-4">
       <Input
         type="password"
-        placeholder="Mật khẩu mới"
+        label="Mật khẩu mới"
+        placeholder="••••••••"
         autoComplete="new-password"
         error={formState.errors.newPassword?.message}
         {...register('newPassword', {
@@ -167,7 +164,8 @@ function ResetStep({
       />
       <Input
         type="password"
-        placeholder="Xác nhận mật khẩu"
+        label="Xác nhận mật khẩu"
+        placeholder="••••••••"
         autoComplete="new-password"
         error={formState.errors.confirm?.message}
         {...register('confirm', {
@@ -176,9 +174,11 @@ function ResetStep({
         })}
       />
       {reset.isError && (
-        <p className="text-sm text-red-600">{getFriendlyMessage(reset.error)}</p>
+        <p className="text-sm text-red-600 dark:text-red-400">
+          {getFriendlyMessage(reset.error)}
+        </p>
       )}
-      <Button type="submit" disabled={reset.isPending}>
+      <Button type="submit" fullWidth disabled={reset.isPending}>
         {reset.isPending ? 'Đang cập nhật…' : 'Đặt lại mật khẩu'}
       </Button>
     </form>
