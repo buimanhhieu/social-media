@@ -1,15 +1,11 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: update    # dev: tự update schema
-    properties:
-      hibernate:
-        hbm2ddl:
-          create_namespaces: true   # tự CREATE SCHEMA cho user_schema, post_schema, …
+      ddl-auto: validate   # dev khớp prod: Liquibase tạo schema, JPA chỉ validate
     show-sql: true
 
   liquibase:
-    enabled: false        # dev: dùng ddl-auto thay Liquibase
+    enabled: true          # chạy migration ở dev để bắt lệch schema sớm
 
 logging:
   level:
