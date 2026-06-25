@@ -32,6 +32,7 @@ public class Post extends BaseEntity {
     @Column(name = "is_hidden", nullable = false)
     private boolean isHidden = false;
 
+    @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderIndex ASC")
     private List<PostMedia> mediaList = new ArrayList<>();

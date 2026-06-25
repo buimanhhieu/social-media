@@ -21,6 +21,7 @@ public class Follow {
     @Column(name = "following_id")
     private Long followingId;
 
+    @Builder.Default
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 }

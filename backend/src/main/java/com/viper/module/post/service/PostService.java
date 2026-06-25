@@ -82,6 +82,9 @@ public class PostService {
     public PostResponse getPostById(Long id, Long currentUserId) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException(id));
+        if (post.isHidden() && !post.getAuthorId().equals(currentUserId)) {
+            throw new PostNotFoundException(id);
+        }
         return toResponse(post, currentUserId);
     }
 
