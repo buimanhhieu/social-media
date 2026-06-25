@@ -1,5 +1,5 @@
 -- liquibase formatted sql
--- changeset instagram:create-notifications
+-- changeset viper:create-notifications
 CREATE TABLE notification_schema.notifications (
     id           BIGSERIAL   PRIMARY KEY,
     recipient_id BIGINT      NOT NULL REFERENCES user_schema.users(id) ON DELETE CASCADE,

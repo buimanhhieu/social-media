@@ -1,5 +1,5 @@
 -- liquibase formatted sql
--- changeset instagram:create-schemas
+-- changeset viper:create-schemas
 CREATE SCHEMA IF NOT EXISTS user_schema;
 CREATE SCHEMA IF NOT EXISTS post_schema;
 CREATE SCHEMA IF NOT EXISTS story_schema;

@@ -1,12 +1,10 @@
-version: '3.9'
-
 services:
 
   postgres:
     image: postgres:16-alpine
-    container_name: instagram_postgres
+    container_name: viper_postgres
     environment:
-      POSTGRES_DB: instagram_db
+      POSTGRES_DB: viper_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
@@ -21,7 +19,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: instagram_redis
+    container_name: viper_redis
     ports:
       - "6379:6379"
     volumes:

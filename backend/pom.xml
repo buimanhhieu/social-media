@@ -12,11 +12,11 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.instagram</groupId>
-    <artifactId>instagram-clone</artifactId>
+    <groupId>com.viper</groupId>
+    <artifactId>viper-chat</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>instagram-clone</name>
-    <description>Instagram Clone — Modular Monolith</description>
+    <name>viper-chat</name>
+    <description>Viper Chat — Modular Monolith</description>
 
     <properties>
         <java.version>21</java.version>

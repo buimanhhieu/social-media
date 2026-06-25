@@ -13,6 +13,6 @@ spring:
 
 logging:
   level:
-    com.instagram: DEBUG
+    com.viper: DEBUG
     org.springframework.security: DEBUG
     org.hibernate.SQL: DEBUG

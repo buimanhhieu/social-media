@@ -1,5 +1,5 @@
 -- liquibase formatted sql
--- changeset instagram:create-stories
+-- changeset viper:create-stories
 CREATE TABLE story_schema.stories (
     id         BIGSERIAL    PRIMARY KEY,
     author_id  BIGINT       NOT NULL REFERENCES user_schema.users(id) ON DELETE CASCADE,

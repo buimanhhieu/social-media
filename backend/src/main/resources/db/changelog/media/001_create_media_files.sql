@@ -1,5 +1,5 @@
 -- liquibase formatted sql
--- changeset instagram:create-media-files
+-- changeset viper:create-media-files
 CREATE TABLE media_schema.media_files (
     id              BIGSERIAL    PRIMARY KEY,
     owner_id        BIGINT       NOT NULL REFERENCES user_schema.users(id) ON DELETE CASCADE,

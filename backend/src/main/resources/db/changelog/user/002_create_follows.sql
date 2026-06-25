@@ -1,5 +1,5 @@
 -- liquibase formatted sql
--- changeset instagram:create-follows
+-- changeset viper:create-follows
 CREATE TABLE user_schema.follows (
     follower_id  BIGINT      NOT NULL REFERENCES user_schema.users(id) ON DELETE CASCADE,
     following_id BIGINT      NOT NULL REFERENCES user_schema.users(id) ON DELETE CASCADE,

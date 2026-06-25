@@ -1,5 +1,5 @@
 -- liquibase formatted sql
--- changeset instagram:create-users
+-- changeset viper:create-users
 CREATE TABLE user_schema.users (
     id            BIGSERIAL    PRIMARY KEY,
     username      VARCHAR(30)  NOT NULL UNIQUE,

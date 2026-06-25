@@ -1,12 +1,12 @@
 spring:
   application:
-    name: instagram-clone
+    name: viper-chat
 
   profiles:
     active: dev
 
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:instagram_db}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:viper_db}
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
@@ -40,7 +40,7 @@ spring:
   mail:
     host: ${MAIL_HOST:smtp.gmail.com}
     port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:no-reply@instagram-clone.local}
+    username: ${MAIL_USERNAME:no-reply@viper-chat.local}
     password: ${MAIL_PASSWORD:}
     properties:
       mail:
@@ -68,11 +68,16 @@ app:
     refresh-token-expiry-ms: 2592000000  # 30 ngày
 
   storage:
-    bucket: ${STORAGE_BUCKET:instagram-clone}
-    cdn-url: ${CDN_URL:}                  # CDN (CloudFront…); để trống sẽ dùng URL S3 mặc định
+    bucket: ${STORAGE_BUCKET:viper-chat}
+    cdn-url: ${CDN_URL:}                  # CDN (CloudFront…); để trống sẽ dùng URL S3/endpoint mặc định
     region: ${AWS_REGION:ap-southeast-1}
     access-key: ${AWS_ACCESS_KEY:}
     secret-key: ${AWS_SECRET_KEY:}
+    endpoint: ${STORAGE_ENDPOINT:}        # S3-compatible endpoint (MinIO dev); để trống = AWS thật
+    path-style: ${STORAGE_PATH_STYLE:false}   # true cho MinIO
+    public-url: ${STORAGE_PUBLIC_URL:}    # base URL public để truy cập object (dev: http://localhost:9000)
+    image-max-dimension: 1080
+    thumbnail-dimension: 320
 
   cors:
     allowed-origins: http://localhost:5173,http://localhost:3000   # Vite dev + CRA dev

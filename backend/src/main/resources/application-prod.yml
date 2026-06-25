@@ -9,5 +9,5 @@ spring:
 
 logging:
   level:
-    com.instagram: INFO
+    com.viper: INFO
     root: WARN

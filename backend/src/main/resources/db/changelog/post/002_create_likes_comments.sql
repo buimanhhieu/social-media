@@ -1,5 +1,5 @@
 -- liquibase formatted sql
--- changeset instagram:create-likes-comments
+-- changeset viper:create-likes-comments
 CREATE TABLE post_schema.likes (
     user_id    BIGINT      NOT NULL REFERENCES user_schema.users(id) ON DELETE CASCADE,
     post_id    BIGINT      NOT NULL REFERENCES post_schema.posts(id) ON DELETE CASCADE,

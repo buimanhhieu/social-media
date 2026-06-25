@@ -1,5 +1,5 @@
 -- liquibase formatted sql
--- changeset instagram:create-chat
+-- changeset viper:create-chat
 CREATE TABLE chat_schema.conversations (
     id         BIGSERIAL   PRIMARY KEY,
     is_group   BOOLEAN     NOT NULL DEFAULT FALSE,
