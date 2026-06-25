@@ -1,8 +1,16 @@
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { commentApi, mediaApi, postApi } from './endpoints';
 import type { CreateCommentRequest, CreatePostRequest } from '../types';
 
 const FEED_SIZE = 10;
+
+export function useUserPosts(userId: number | undefined) {
+  return useQuery({
+    queryKey: ['userPosts', userId],
+    queryFn: () => postApi.userPosts(userId!, 0, 30),
+    enabled: !!userId,
+  });
+}
 
 export function useFeed() {
   return useInfiniteQuery({
