@@ -4,15 +4,18 @@ import { Logo } from '@shared/ui/Logo';
 import { AppShell } from '@shared/ui/AppShell';
 import { Feed } from '@features/post';
 import { useAuthStore, useLogout } from '@features/auth';
+import { useCurrentUser } from '@features/user';
 
 export function HomePage() {
   const accessToken = useAuthStore((s) => s.accessToken);
   const logout = useLogout();
   const navigate = useNavigate();
+  const { data: user } = useCurrentUser();
 
   if (accessToken) {
     return (
       <AppShell
+        user={user}
         loggingOut={logout.isPending}
         onLogout={() => logout.mutate(undefined, { onSettled: () => navigate('/login') })}
       >
