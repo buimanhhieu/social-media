@@ -12,6 +12,42 @@ export function useCurrentUser() {
   });
 }
 
+export function useUserProfile(username: string | undefined) {
+  return useQuery({
+    queryKey: ['profile', username],
+    queryFn: () => userApi.byUsername(username!),
+    enabled: !!username,
+  });
+}
+
+export function useSuggestions() {
+  return useQuery({
+    queryKey: ['suggestions'],
+    queryFn: userApi.suggestions,
+    enabled: !!tokenStorage.getAccess(),
+  });
+}
+
+function useFollowMutation(action: (userId: number) => Promise<void>) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: action,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['profile'] });
+      qc.invalidateQueries({ queryKey: ['suggestions'] });
+      qc.invalidateQueries({ queryKey: ['feed'] });
+    },
+  });
+}
+
+export function useFollow() {
+  return useFollowMutation(userApi.follow);
+}
+
+export function useUnfollow() {
+  return useFollowMutation(userApi.unfollow);
+}
+
 export function useUpdateProfile() {
   const qc = useQueryClient();
   return useMutation({
