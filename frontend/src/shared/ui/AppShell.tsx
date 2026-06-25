@@ -1,6 +1,6 @@
 import { type ReactNode, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, LogOut, PlusSquare, User } from 'lucide-react';
+import { Home, LogOut, PlusSquare, Settings, User } from 'lucide-react';
 import { Logo } from './Logo';
 import { Avatar } from './Avatar';
 import { cn } from '@shared/lib/cn';
@@ -135,6 +135,15 @@ function ProfileMenu({ user, onLogout, loggingOut }: Omit<AppShellProps, 'childr
             >
               <User className="h-4 w-4" strokeWidth={2} />
               Trang cá nhân
+            </Link>
+
+            <Link
+              to="/settings"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            >
+              <Settings className="h-4 w-4" strokeWidth={2} />
+              Cài đặt
             </Link>
 
             <button
