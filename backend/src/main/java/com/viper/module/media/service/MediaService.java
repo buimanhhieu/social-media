@@ -14,20 +14,25 @@ import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class MediaService {
+
+    /** Chặn "decompression bomb": ảnh khai báo độ phân giải khổng lồ làm OOM khi decode. */
+    private static final long MAX_PIXELS = 40_000_000L; // ~40 megapixel
 
     private final StorageService storageService;
     private final MediaFileRepository mediaFileRepository;
@@ -38,13 +43,16 @@ public class MediaService {
     @Value("${app.storage.thumbnail-dimension:320}")
     private int thumbnailDimension;
 
-    @Transactional
+    // Cố ý KHÔNG mở DB transaction quanh hàm này: upload S3 là I/O mạng (chậm),
+    // không nên giữ connection pool trong suốt thời gian đó. Chỉ có 1 insert ở cuối (tự commit).
     public MediaResponse uploadImage(Long ownerId, MediaContext context, MultipartFile file) {
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
             throw new InvalidMediaTypeException(contentType);
         }
         try {
+            ensureWithinPixelLimit(file, contentType);
+
             BufferedImage source = ImageIO.read(file.getInputStream());
             if (source == null) {
                 throw new InvalidMediaTypeException(contentType);
@@ -79,6 +87,27 @@ public class MediaService {
             return MediaResponse.from(saved);
         } catch (IOException e) {
             throw new BusinessException("Failed to process image", HttpStatus.UNPROCESSABLE_ENTITY, "MEDIA_PROCESSING_FAILED");
+        }
+    }
+
+    /** Đọc kích thước từ header (không decode toàn bộ) và từ chối nếu vượt {@link #MAX_PIXELS}. */
+    private void ensureWithinPixelLimit(MultipartFile file, String contentType) throws IOException {
+        try (ImageInputStream iis = ImageIO.createImageInputStream(file.getInputStream())) {
+            Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
+            if (!readers.hasNext()) {
+                throw new InvalidMediaTypeException(contentType);
+            }
+            ImageReader reader = readers.next();
+            try {
+                reader.setInput(iis);
+                long pixels = (long) reader.getWidth(0) * reader.getHeight(0);
+                if (pixels > MAX_PIXELS) {
+                    throw new BusinessException("Ảnh có độ phân giải quá lớn",
+                            HttpStatus.PAYLOAD_TOO_LARGE, "IMAGE_TOO_LARGE");
+                }
+            } finally {
+                reader.dispose();
+            }
         }
     }
 
