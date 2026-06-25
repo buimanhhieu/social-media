@@ -26,6 +26,8 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = tokenStorage.getAccess();
   if (token) config.headers.Authorization = `Bearer ${token}`;
+  // Để axios tự set multipart boundary khi gửi FormData (upload ảnh).
+  if (config.data instanceof FormData) delete config.headers['Content-Type'];
   return config;
 });
 
