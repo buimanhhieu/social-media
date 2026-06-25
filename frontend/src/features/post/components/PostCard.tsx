@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Heart, MapPin, MessageCircle } from 'lucide-react';
 import { Avatar } from '@shared/ui/Avatar';
 import { cn } from '@shared/lib/cn';
@@ -38,9 +39,16 @@ export function PostCard({ post }: { post: PostResponse }) {
   return (
     <article className="overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
       <header className="flex items-center gap-3 px-4 py-3">
-        <Avatar src={author.avatarUrl} name={author.displayName ?? author.username} size="md" />
+        <Link to={`/u/${author.username}`}>
+          <Avatar src={author.avatarUrl} name={author.displayName ?? author.username} size="md" />
+        </Link>
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-zinc-900 dark:text-white">{author.username}</p>
+          <Link
+            to={`/u/${author.username}`}
+            className="block truncate text-sm font-semibold text-zinc-900 hover:underline dark:text-white"
+          >
+            {author.username}
+          </Link>
           {post.location && (
             <p className="flex items-center gap-1 truncate text-xs text-zinc-500">
               <MapPin className="h-3 w-3" strokeWidth={2} />

@@ -1,6 +1,6 @@
 import { type ReactNode, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, LogOut, PlusSquare, Settings, User } from 'lucide-react';
+import { Compass, Home, LogOut, PlusSquare, Settings, User } from 'lucide-react';
 import { Logo } from './Logo';
 import { Avatar } from './Avatar';
 import { cn } from '@shared/lib/cn';
@@ -20,6 +20,7 @@ interface AppShellProps {
 
 const NAV = [
   { to: '/', label: 'Trang chủ', icon: Home },
+  { to: '/explore', label: 'Khám phá', icon: Compass },
   { to: '/create', label: 'Tạo bài viết', icon: PlusSquare },
 ];
 
