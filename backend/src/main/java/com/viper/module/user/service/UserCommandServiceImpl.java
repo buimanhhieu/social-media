@@ -2,6 +2,7 @@ package com.viper.module.user.service;
 
 import com.viper.core.exception.ResourceNotFoundException;
 import com.viper.module.user.dto.request.CreateUserCommand;
+import com.viper.module.user.dto.request.UpdateProfileRequest;
 import com.viper.module.user.dto.response.UserAuthView;
 import com.viper.module.user.dto.response.UserSummary;
 import com.viper.module.user.entity.User;
@@ -31,6 +32,17 @@ public class UserCommandServiceImpl implements UserCommandService {
                 .build();
         User saved = userRepository.save(user);
         return new UserSummary(saved.getId(), saved.getUsername(), saved.getDisplayName(), saved.getAvatarUrl());
+    }
+
+    @Override
+    public void updateProfile(Long userId, UpdateProfileRequest req) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", userId));
+        if (req.displayName() != null) user.setDisplayName(req.displayName());
+        if (req.bio() != null) user.setBio(req.bio());
+        if (req.websiteUrl() != null) user.setWebsiteUrl(req.websiteUrl());
+        if (req.avatarUrl() != null) user.setAvatarUrl(req.avatarUrl());
+        if (req.isPrivate() != null) user.setPrivate(req.isPrivate());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.viper.module.user.service;
 
+import com.viper.module.user.dto.response.UserProfileResponse;
 import com.viper.module.user.dto.response.UserSummary;
 
 import java.util.List;
@@ -9,6 +10,9 @@ public interface UserQueryService {
     UserSummary getUserSummaryById(Long userId);
     UserSummary getUserSummaryByUsername(String username);
     boolean existsById(Long userId);
+
+    /** Hồ sơ đầy đủ kèm số người theo dõi/đang theo dõi (cho trang cá nhân). */
+    UserProfileResponse getProfile(Long userId);
 
     /** Lấy nhiều summary một lần (tránh N+1 khi dựng feed/danh sách). */
     List<UserSummary> getUserSummariesByIds(List<Long> ids);

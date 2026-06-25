@@ -1,6 +1,7 @@
 package com.viper.module.user.service;
 
 import com.viper.module.user.dto.request.CreateUserCommand;
+import com.viper.module.user.dto.request.UpdateProfileRequest;
 import com.viper.module.user.dto.response.UserAuthView;
 import com.viper.module.user.dto.response.UserSummary;
 
@@ -9,6 +10,9 @@ import java.util.Optional;
 public interface UserCommandService {
 
     UserSummary createUnverifiedUser(CreateUserCommand cmd);
+
+    /** Cập nhật hồ sơ (partial — chỉ field khác null mới ghi đè). */
+    void updateProfile(Long userId, UpdateProfileRequest req);
 
     void markEmailVerified(Long userId);
 

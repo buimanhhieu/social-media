@@ -1,7 +1,9 @@
 package com.viper.module.user.service;
 
 import com.viper.core.exception.ResourceNotFoundException;
+import com.viper.module.user.dto.response.UserProfileResponse;
 import com.viper.module.user.dto.response.UserSummary;
+import com.viper.module.user.entity.User;
 import com.viper.module.user.repository.FollowRepository;
 import com.viper.module.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +42,18 @@ public class UserQueryServiceImpl implements UserQueryService {
     @Override
     public List<Long> getFollowingIds(Long userId) {
         return followRepository.findFollowingIdsByUserId(userId);
+    }
+
+    @Override
+    public UserProfileResponse getProfile(Long userId) {
+        User u = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", userId));
+        long followers = followRepository.countByFollowingId(userId);
+        long following = followRepository.countByFollowerId(userId);
+        return new UserProfileResponse(
+                u.getId(), u.getUsername(), u.getDisplayName(), u.getBio(),
+                u.getAvatarUrl(), u.getWebsiteUrl(), u.isPrivate(), u.isVerified(),
+                followers, following, false);
     }
 
     @Override
