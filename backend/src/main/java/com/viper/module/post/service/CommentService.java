@@ -18,6 +18,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -43,10 +48,13 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public PageResponse<CommentResponse> listComments(Long postId, int page, int size) {
-        Page<CommentResponse> result = commentRepository
-                .findByPostIdOrderByCreatedAtDesc(postId, PageRequest.of(page, size))
-                .map(c -> CommentResponse.from(c, userQueryService.getUserSummaryById(c.getAuthorId())));
-        return PageResponse.from(result);
+        Page<Comment> comments = commentRepository
+                .findByPostIdOrderByCreatedAtDesc(postId, PageRequest.of(page, size));
+        List<Long> authorIds = comments.getContent().stream()
+                .map(Comment::getAuthorId).distinct().toList();
+        Map<Long, UserSummary> authors = userQueryService.getUserSummariesByIds(authorIds).stream()
+                .collect(Collectors.toMap(UserSummary::id, Function.identity()));
+        return PageResponse.from(comments.map(c -> CommentResponse.from(c, authors.get(c.getAuthorId()))));
     }
 
     /** Xoá được nếu là tác giả bình luận, hoặc là chủ bài viết. */
