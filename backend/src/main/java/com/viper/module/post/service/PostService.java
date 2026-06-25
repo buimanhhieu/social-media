@@ -6,12 +6,16 @@ import com.viper.module.media.service.MediaQueryService;
 import com.viper.module.post.dto.request.CreatePostRequest;
 import com.viper.module.post.dto.response.PostResponse;
 import com.viper.module.post.dto.response.PostSummary;
+import com.viper.module.post.entity.Like;
 import com.viper.module.post.entity.Post;
 import com.viper.module.post.entity.PostMedia;
 import com.viper.module.post.entity.PostType;
 import com.viper.module.post.event.PostCreatedEvent;
+import com.viper.module.post.event.PostLikedEvent;
 import com.viper.module.post.exception.PostAccessDeniedException;
 import com.viper.module.post.exception.PostNotFoundException;
+import com.viper.module.post.repository.CommentRepository;
+import com.viper.module.post.repository.LikeRepository;
 import com.viper.module.post.repository.PostRepository;
 import com.viper.module.user.dto.response.UserSummary;
 import com.viper.module.user.service.UserQueryService;
@@ -31,6 +35,8 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final LikeRepository likeRepository;
+    private final CommentRepository commentRepository;
     private final UserQueryService userQueryService;
     private final MediaQueryService mediaQueryService;
     private final ApplicationEventPublisher events;
@@ -83,10 +89,32 @@ public class PostService {
         return PageResponse.from(result);
     }
 
-    /** Dựng PostResponse cho 1 post. Like/comment count sẽ được điền sau. */
+    public PostResponse like(Long postId, Long userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException(postId));
+        if (!likeRepository.existsByUserIdAndPostId(userId, postId)) {
+            likeRepository.save(Like.builder().userId(userId).postId(postId).build());
+            UserSummary liker = userQueryService.getUserSummaryById(userId);
+            events.publishEvent(new PostLikedEvent(this, postId, post.getAuthorId(), userId, liker.username()));
+        }
+        return toResponse(post, userId);
+    }
+
+    public PostResponse unlike(Long postId, Long userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException(postId));
+        likeRepository.deleteByUserIdAndPostId(userId, postId);
+        return toResponse(post, userId);
+    }
+
+    /** Dựng PostResponse cho 1 post kèm số like và trạng thái đã-like của người xem. */
     private PostResponse toResponse(Post post, Long currentUserId) {
         UserSummary author = userQueryService.getUserSummaryById(post.getAuthorId());
-        return PostResponse.from(post, author, 0, 0, false);
+        long likeCount = likeRepository.countByPostId(post.getId());
+        long commentCount = commentRepository.countByPostId(post.getId());
+        boolean likedByMe = currentUserId != null
+                && likeRepository.existsByUserIdAndPostId(currentUserId, post.getId());
+        return PostResponse.from(post, author, likeCount, commentCount, likedByMe);
     }
 
     public void deletePost(Long id, Long currentUserId) {

@@ -41,6 +41,20 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/posts/{id}/like")
+    public ResponseEntity<PostResponse> like(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long id) {
+        return ResponseEntity.ok(postService.like(id, userId));
+    }
+
+    @DeleteMapping("/posts/{id}/like")
+    public ResponseEntity<PostResponse> unlike(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long id) {
+        return ResponseEntity.ok(postService.unlike(id, userId));
+    }
+
     @GetMapping("/feed")
     public ResponseEntity<PageResponse<PostResponse>> feed(
             @AuthenticationPrincipal Long userId,
