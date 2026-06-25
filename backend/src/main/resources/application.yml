@@ -23,6 +23,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: false
         default_schema: public
+        default_batch_fetch_size: 30   # gom lazy-load (vd post.mediaList) thành IN-query theo lô
     show-sql: false
     open-in-view: false
 

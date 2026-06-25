@@ -10,6 +10,9 @@ public interface UserQueryService {
     UserSummary getUserSummaryByUsername(String username);
     boolean existsById(Long userId);
 
+    /** Lấy nhiều summary một lần (tránh N+1 khi dựng feed/danh sách). */
+    List<UserSummary> getUserSummariesByIds(List<Long> ids);
+
     /** Id của những người mà {@code userId} đang theo dõi — dùng để dựng feed. */
     List<Long> getFollowingIds(Long userId);
 }

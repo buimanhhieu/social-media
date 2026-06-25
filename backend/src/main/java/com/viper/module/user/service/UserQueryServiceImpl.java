@@ -41,4 +41,14 @@ public class UserQueryServiceImpl implements UserQueryService {
     public List<Long> getFollowingIds(Long userId) {
         return followRepository.findFollowingIdsByUserId(userId);
     }
+
+    @Override
+    public List<UserSummary> getUserSummariesByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        return userRepository.findAllById(ids).stream()
+                .map(u -> new UserSummary(u.getId(), u.getUsername(), u.getDisplayName(), u.getAvatarUrl()))
+                .toList();
+    }
 }

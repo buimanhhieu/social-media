@@ -16,6 +16,7 @@ import com.viper.module.post.exception.PostAccessDeniedException;
 import com.viper.module.post.exception.PostNotFoundException;
 import com.viper.module.post.repository.CommentRepository;
 import com.viper.module.post.repository.LikeRepository;
+import com.viper.module.post.repository.PostCount;
 import com.viper.module.post.repository.PostRepository;
 import com.viper.module.user.dto.response.UserSummary;
 import com.viper.module.user.service.UserQueryService;
@@ -27,7 +28,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -83,10 +89,9 @@ public class PostService {
     public PageResponse<PostResponse> getFeed(Long userId, int page, int size) {
         List<Long> authorIds = new ArrayList<>(userQueryService.getFollowingIds(userId));
         authorIds.add(userId); // luôn gồm cả bài của chính mình
-        Page<PostResponse> result = postRepository
-                .findFeedPosts(authorIds, PageRequest.of(page, size))
-                .map(p -> toResponse(p, userId));
-        return PageResponse.from(result);
+        Page<Post> posts = postRepository.findFeedPosts(authorIds, PageRequest.of(page, size));
+        BatchContext ctx = loadBatchContext(posts.getContent(), userId);
+        return PageResponse.from(posts.map(p -> toResponse(p, ctx)));
     }
 
     public PostResponse like(Long postId, Long userId) {
@@ -107,7 +112,7 @@ public class PostService {
         return toResponse(post, userId);
     }
 
-    /** Dựng PostResponse cho 1 post kèm số like và trạng thái đã-like của người xem. */
+    /** Dựng PostResponse cho 1 post (dùng cho thao tác đơn lẻ: xem chi tiết, like/unlike). */
     private PostResponse toResponse(Post post, Long currentUserId) {
         UserSummary author = userQueryService.getUserSummaryById(post.getAuthorId());
         long likeCount = likeRepository.countByPostId(post.getId());
@@ -116,6 +121,40 @@ public class PostService {
                 && likeRepository.existsByUserIdAndPostId(currentUserId, post.getId());
         return PostResponse.from(post, author, likeCount, commentCount, likedByMe);
     }
+
+    /** Dựng PostResponse từ dữ liệu đã nạp sẵn theo lô (cho feed) — không phát sinh query mới. */
+    private PostResponse toResponse(Post post, BatchContext ctx) {
+        UserSummary author = ctx.authors().get(post.getAuthorId());
+        long likeCount = ctx.likeCounts().getOrDefault(post.getId(), 0L);
+        long commentCount = ctx.commentCounts().getOrDefault(post.getId(), 0L);
+        boolean likedByMe = ctx.likedPostIds().contains(post.getId());
+        return PostResponse.from(post, author, likeCount, commentCount, likedByMe);
+    }
+
+    /** Nạp author + đếm like/comment + tập post đã-like cho cả trang trong vài query, tránh N+1. */
+    private BatchContext loadBatchContext(List<Post> posts, Long currentUserId) {
+        if (posts.isEmpty()) {
+            return new BatchContext(Map.of(), Map.of(), Map.of(), Set.of());
+        }
+        List<Long> postIds = posts.stream().map(Post::getId).toList();
+        List<Long> authorIds = posts.stream().map(Post::getAuthorId).distinct().toList();
+
+        Map<Long, UserSummary> authors = userQueryService.getUserSummariesByIds(authorIds).stream()
+                .collect(Collectors.toMap(UserSummary::id, Function.identity()));
+        Map<Long, Long> likeCounts = likeRepository.countByPostIds(postIds).stream()
+                .collect(Collectors.toMap(PostCount::postId, PostCount::count));
+        Map<Long, Long> commentCounts = commentRepository.countByPostIds(postIds).stream()
+                .collect(Collectors.toMap(PostCount::postId, PostCount::count));
+        Set<Long> likedPostIds = new HashSet<>(likeRepository.findLikedPostIds(currentUserId, postIds));
+
+        return new BatchContext(authors, likeCounts, commentCounts, likedPostIds);
+    }
+
+    private record BatchContext(
+            Map<Long, UserSummary> authors,
+            Map<Long, Long> likeCounts,
+            Map<Long, Long> commentCounts,
+            Set<Long> likedPostIds) {}
 
     public void deletePost(Long id, Long currentUserId) {
         Post post = postRepository.findById(id)
