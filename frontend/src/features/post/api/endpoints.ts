@@ -15,6 +15,11 @@ export const postApi = {
       .get<PageResponse<PostResponse>>('/api/feed', { params: { page, size } })
       .then((r) => r.data),
 
+  explore: (page = 0, size = 24) =>
+    apiClient
+      .get<PageResponse<PostSummary>>('/api/posts/explore', { params: { page, size } })
+      .then((r) => r.data),
+
   getById: (id: number) =>
     apiClient.get<PostResponse>(`/api/posts/${id}`).then((r) => r.data),
 

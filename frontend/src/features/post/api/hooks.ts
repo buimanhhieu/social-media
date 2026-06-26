@@ -21,6 +21,23 @@ export function useFeed() {
   });
 }
 
+export function useExplore() {
+  return useInfiniteQuery({
+    queryKey: ['explore'],
+    initialPageParam: 0,
+    queryFn: ({ pageParam }) => postApi.explore(pageParam, 24),
+    getNextPageParam: (last) => (last.last ? undefined : last.page + 1),
+  });
+}
+
+export function usePost(id: number) {
+  return useQuery({
+    queryKey: ['post', id],
+    queryFn: () => postApi.getById(id),
+    enabled: Number.isFinite(id) && id > 0,
+  });
+}
+
 export function useUploadMedia() {
   return useMutation({ mutationFn: (file: File) => mediaApi.upload(file) });
 }

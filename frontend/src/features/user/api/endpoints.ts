@@ -15,6 +15,9 @@ export const userApi = {
   suggestions: () =>
     apiClient.get<UserSummary[]>('/api/users/suggestions').then((r) => r.data),
 
+  search: (q: string) =>
+    apiClient.get<UserSummary[]>('/api/users/search', { params: { q } }).then((r) => r.data),
+
   follow: (userId: number) => apiClient.post<void>(`/api/users/${userId}/follow`).then((r) => r.data),
 
   unfollow: (userId: number) =>

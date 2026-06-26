@@ -28,6 +28,15 @@ export function useSuggestions() {
   });
 }
 
+export function useSearchUsers(query: string) {
+  const q = query.trim();
+  return useQuery({
+    queryKey: ['search', q],
+    queryFn: () => userApi.search(q),
+    enabled: q.length >= 1,
+  });
+}
+
 function useFollowMutation(action: (userId: number) => Promise<void>) {
   const qc = useQueryClient();
   return useMutation({

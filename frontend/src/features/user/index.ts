@@ -2,6 +2,7 @@ export {
   useCurrentUser,
   useUserProfile,
   useSuggestions,
+  useSearchUsers,
   useFollow,
   useUnfollow,
   useUpdateProfile,
