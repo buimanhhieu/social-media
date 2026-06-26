@@ -7,8 +7,8 @@ import {
   MapPin,
   MessageCircle,
   Music,
-  Pause,
-  Play,
+  Volume2,
+  VolumeX,
 } from 'lucide-react';
 import { Avatar } from '@shared/ui/Avatar';
 import { cn } from '@shared/lib/cn';
@@ -23,7 +23,7 @@ export function PostCard({ post }: { post: PostResponse }) {
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [showComments, setShowComments] = useState(false);
   const [idx, setIdx] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  const [soundOn, setSoundOn] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const like = useLikePost();
   const unlike = useUnlikePost();
@@ -37,17 +37,24 @@ export function PostCard({ post }: { post: PostResponse }) {
   const author = post.author;
   const cover = post.media[idx];
 
-  const toggleMusic = () => {
+  const toggleSound = () => {
     const audio = audioRef.current;
     if (!audio) return;
-    if (playing) {
+    if (soundOn) {
       audio.pause();
-      setPlaying(false);
+      setSoundOn(false);
     } else {
+      audio.muted = false;
       void audio.play();
-      setPlaying(true);
+      setSoundOn(true);
     }
   };
+
+  // Dừng nhạc khi rời khỏi (unmount).
+  useEffect(() => {
+    const audio = audioRef.current;
+    return () => audio?.pause();
+  }, []);
 
   const toggleLike = () => {
     const next = !liked;
@@ -133,20 +140,25 @@ export function PostCard({ post }: { post: PostResponse }) {
           )}
 
           {post.music && (
-            <button
-              type="button"
-              onClick={toggleMusic}
-              className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full bg-black/60 py-1 pl-2 pr-3 text-xs font-medium text-white backdrop-blur"
-            >
-              {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
-              <Music className="h-3 w-3" />
-              <span className="max-w-36 truncate">{post.music.name}</span>
-            </button>
+            <>
+              <div className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full bg-black/55 py-1 pl-2 pr-3 text-xs font-medium text-white backdrop-blur">
+                <Music className={cn('h-3.5 w-3.5', soundOn && 'animate-pulse')} />
+                <span className="max-w-40 truncate">{post.music.name}</span>
+              </div>
+              <button
+                type="button"
+                onClick={toggleSound}
+                aria-label={soundOn ? 'Tắt tiếng' : 'Bật tiếng'}
+                className="absolute bottom-3 right-3 rounded-full bg-black/55 p-2 text-white backdrop-blur transition-colors hover:bg-black/70"
+              >
+                {soundOn ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+              </button>
+            </>
           )}
         </div>
       )}
       {post.music && (
-        <audio ref={audioRef} src={post.music.url} onEnded={() => setPlaying(false)} className="hidden" />
+        <audio ref={audioRef} src={post.music.url} loop onEnded={() => setSoundOn(false)} className="hidden" />
       )}
 
       <div className="flex items-center gap-5 px-4 pt-3">
