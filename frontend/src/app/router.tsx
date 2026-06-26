@@ -4,6 +4,7 @@ import { CreatePostPage } from '@pages/CreatePostPage';
 import { ProfilePage } from '@pages/ProfilePage';
 import { UserProfilePage } from '@pages/UserProfilePage';
 import { ExplorePage } from '@pages/ExplorePage';
+import { PostDetailPage } from '@pages/PostDetailPage';
 import { SettingsPage } from '@pages/SettingsPage';
 import { LoginPage } from '@pages/LoginPage';
 import { RegisterPage } from '@pages/RegisterPage';
@@ -20,6 +21,7 @@ export function AppRouter() {
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/u/:username" element={<UserProfilePage />} />
       <Route path="/explore" element={<ExplorePage />} />
+      <Route path="/p/:id" element={<PostDetailPage />} />
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />

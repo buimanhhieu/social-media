@@ -137,7 +137,7 @@ export function UserProfilePage() {
           {items.map((p) => (
             <Link
               key={p.id}
-              to="/"
+              to={`/p/${p.id}`}
               className="aspect-square overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800"
             >
               <img src={p.thumbnailUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
