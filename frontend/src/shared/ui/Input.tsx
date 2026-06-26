@@ -19,7 +19,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       {label && (
         <label
           htmlFor={inputId}
-          className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="text-sm font-medium text-stone-700 dark:text-stone-300"
         >
           {label}
         </label>
@@ -29,19 +29,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         ref={ref}
         aria-invalid={error ? true : undefined}
         className={cn(
-          'h-11 w-full rounded-xl border bg-white px-3.5 text-sm text-zinc-900 transition-colors',
-          'placeholder:text-zinc-400',
+          'h-11 w-full rounded-xl border bg-surface px-3.5 text-sm text-stone-900 transition-colors',
+          'placeholder:text-stone-400',
           'focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
-          'dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500',
+          'dark:bg-surface-dark dark:text-stone-100 dark:placeholder:text-stone-500',
           error
             ? 'border-red-500 dark:border-red-500/70'
-            : 'border-zinc-300 dark:border-zinc-700',
+            : 'border-line dark:border-line-dark',
           className,
         )}
         {...props}
       />
       {hint && !error && (
-        <span className="text-xs text-zinc-500 dark:text-zinc-400">{hint}</span>
+        <span className="text-xs text-stone-500 dark:text-stone-400">{hint}</span>
       )}
       {error && <span className="text-xs text-red-600 dark:text-red-400">{error}</span>}
     </div>

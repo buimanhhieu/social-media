@@ -36,19 +36,19 @@ export function ExplorePage() {
     >
       {/* Ô tìm người */}
       <div className="relative mb-6">
-        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Tìm người dùng…"
-          className="h-11 w-full rounded-2xl border border-zinc-200 bg-white pl-10 pr-10 text-sm text-zinc-900 transition-colors placeholder:text-zinc-400 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+          className="h-11 w-full rounded-2xl border border-line bg-surface pl-10 pr-10 text-sm text-stone-900 transition-colors placeholder:text-stone-400 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:border-line-dark dark:bg-surface-dark dark:text-stone-100"
         />
         {searching && (
           <button
             type="button"
             onClick={() => setQuery('')}
             aria-label="Xoá"
-            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-stone-400 hover:bg-canvas dark:hover:bg-stone-800"
           >
             <X className="h-4 w-4" />
           </button>
@@ -67,19 +67,19 @@ export function ExplorePage() {
         <>
           {(suggestions?.length ?? 0) > 0 && (
             <section className="mb-8">
-              <h2 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-white">Gợi ý theo dõi</h2>
+              <h2 className="mb-3 text-sm font-semibold text-stone-900 dark:text-white">Gợi ý theo dõi</h2>
               <div className="flex gap-3 overflow-x-auto pb-1">
                 {suggestions!.map((u) => (
                   <div
                     key={u.id}
-                    className="flex w-32 shrink-0 flex-col items-center gap-2 rounded-2xl border border-zinc-200 bg-white p-3 text-center dark:border-zinc-800 dark:bg-zinc-900"
+                    className="flex w-32 shrink-0 flex-col items-center gap-2 rounded-2xl border border-line bg-surface p-3 text-center dark:border-line-dark dark:bg-surface-dark"
                   >
                     <Link to={`/u/${u.username}`}>
                       <Avatar src={u.avatarUrl} name={u.displayName ?? u.username} size="lg" />
                     </Link>
                     <Link
                       to={`/u/${u.username}`}
-                      className="w-full truncate text-xs font-semibold text-zinc-900 hover:underline dark:text-white"
+                      className="w-full truncate text-xs font-semibold text-stone-900 hover:underline dark:text-white"
                     >
                       {u.username}
                     </Link>
@@ -93,15 +93,15 @@ export function ExplorePage() {
           )}
 
           <section>
-            <h2 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-white">Khám phá</h2>
+            <h2 className="mb-3 text-sm font-semibold text-stone-900 dark:text-white">Khám phá</h2>
             {explore.isLoading ? (
               <div className="grid grid-cols-3 gap-1 sm:gap-2">
                 {Array.from({ length: 9 }).map((_, i) => (
-                  <div key={i} className="aspect-square animate-pulse rounded-md bg-zinc-100 dark:bg-zinc-800" />
+                  <div key={i} className="aspect-square animate-pulse rounded-md bg-canvas dark:bg-canvas-dark" />
                 ))}
               </div>
             ) : posts.length === 0 ? (
-              <p className="py-12 text-center text-sm text-zinc-500">Chưa có bài viết nào để khám phá.</p>
+              <p className="py-12 text-center text-sm text-stone-500">Chưa có bài viết nào để khám phá.</p>
             ) : (
               <>
                 <div className="grid grid-cols-3 gap-1 sm:gap-2">
@@ -109,7 +109,7 @@ export function ExplorePage() {
                     <Link
                       key={p.id}
                       to={`/p/${p.id}`}
-                      className="aspect-square overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800"
+                      className="aspect-square overflow-hidden rounded-md bg-canvas dark:bg-canvas-dark"
                     >
                       <img src={p.thumbnailUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
                     </Link>
@@ -149,13 +149,13 @@ function UserList({
   followBusy: boolean;
 }) {
   if (loading) {
-    return <p className="py-12 text-center text-sm text-zinc-500">Đang tìm…</p>;
+    return <p className="py-12 text-center text-sm text-stone-500">Đang tìm…</p>;
   }
   if (users.length === 0) {
-    return <p className="py-12 text-center text-sm text-zinc-500">{emptyText}</p>;
+    return <p className="py-12 text-center text-sm text-stone-500">{emptyText}</p>;
   }
   return (
-    <ul className="divide-y divide-zinc-100 overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900">
+    <ul className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface dark:divide-line-dark dark:border-line-dark dark:bg-surface-dark">
       {users.map((u) => (
         <li key={u.id} className="flex items-center gap-3 px-4 py-3">
           <Link to={`/u/${u.username}`}>
@@ -164,11 +164,11 @@ function UserList({
           <div className="min-w-0 flex-1">
             <Link
               to={`/u/${u.username}`}
-              className="block truncate text-sm font-semibold text-zinc-900 hover:underline dark:text-white"
+              className="block truncate text-sm font-semibold text-stone-900 hover:underline dark:text-white"
             >
               {u.username}
             </Link>
-            {u.displayName && <p className="truncate text-xs text-zinc-500">{u.displayName}</p>}
+            {u.displayName && <p className="truncate text-xs text-stone-500">{u.displayName}</p>}
           </div>
           <Button size="sm" onClick={() => onFollow(u.id)} disabled={followBusy}>
             Theo dõi

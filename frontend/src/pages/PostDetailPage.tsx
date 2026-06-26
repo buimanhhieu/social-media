@@ -29,10 +29,10 @@ export function PostDetailPage() {
   );
 
   if (isLoading) {
-    return shell(<p className="py-16 text-center text-sm text-zinc-500">Đang tải…</p>);
+    return shell(<p className="py-16 text-center text-sm text-stone-500">Đang tải…</p>);
   }
   if (isError || !post) {
-    return shell(<p className="py-16 text-center text-sm text-zinc-500">Không tìm thấy bài viết.</p>);
+    return shell(<p className="py-16 text-center text-sm text-stone-500">Không tìm thấy bài viết.</p>);
   }
 
   return shell(

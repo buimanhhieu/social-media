@@ -25,10 +25,10 @@ export function HomePage() {
   }
 
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-zinc-50 px-6 dark:bg-zinc-950">
-      <div className="animate-rise w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-8 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+    <main className="flex min-h-dvh items-center justify-center bg-canvas px-6 dark:bg-canvas-dark">
+      <div className="animate-rise w-full max-w-md rounded-2xl border border-line bg-surface p-8 text-center shadow-sm dark:border-line-dark dark:bg-surface-dark">
         <Logo className="text-4xl" />
-        <p className="mt-6 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-6 text-sm text-stone-500 dark:text-stone-400">
           Đăng nhập để xem bảng tin của bạn.
         </p>
         <div className="mt-6 flex flex-col gap-3">

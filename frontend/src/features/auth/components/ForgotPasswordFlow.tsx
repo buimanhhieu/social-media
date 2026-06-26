@@ -60,7 +60,7 @@ function RequestStep({ onNext }: { onNext: (email: string) => void }) {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4">
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+      <p className="text-sm text-stone-500 dark:text-stone-400">
         Nhập email tài khoản — nếu tồn tại, chúng tôi sẽ gửi mã OTP.
       </p>
       <Input
@@ -101,9 +101,9 @@ function VerifyStep({
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4">
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+      <p className="text-sm text-stone-500 dark:text-stone-400">
         Mã OTP đã gửi đến{' '}
-        <strong className="font-semibold text-zinc-700 dark:text-zinc-200">{email}</strong>.
+        <strong className="font-semibold text-stone-700 dark:text-stone-200">{email}</strong>.
       </p>
       <Input
         label="Mã OTP"

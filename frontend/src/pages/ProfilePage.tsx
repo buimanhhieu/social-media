@@ -11,7 +11,7 @@ export function ProfilePage() {
     return <Navigate to="/login" replace />;
   }
   if (isLoading || !me) {
-    return <div className="min-h-dvh bg-zinc-50 dark:bg-zinc-950" />;
+    return <div className="min-h-dvh bg-canvas dark:bg-canvas-dark" />;
   }
   return <Navigate to={`/u/${me.username}`} replace />;
 }

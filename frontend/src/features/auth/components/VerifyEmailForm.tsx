@@ -38,9 +38,9 @@ export function VerifyEmailForm({ email, onSuccess }: VerifyEmailFormProps) {
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4">
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+      <p className="text-sm text-stone-500 dark:text-stone-400">
         Mã OTP đã được gửi đến{' '}
-        <strong className="font-semibold text-zinc-700 dark:text-zinc-200">{email}</strong>.
+        <strong className="font-semibold text-stone-700 dark:text-stone-200">{email}</strong>.
       </p>
 
       <Input
@@ -81,7 +81,7 @@ export function VerifyEmailForm({ email, onSuccess }: VerifyEmailFormProps) {
         type="button"
         onClick={onResend}
         disabled={resend.isPending || cooldown > 0}
-        className="text-sm font-medium text-accent hover:underline disabled:cursor-not-allowed disabled:text-zinc-400 dark:disabled:text-zinc-600"
+        className="text-sm font-medium text-accent hover:underline disabled:cursor-not-allowed disabled:text-stone-400 dark:disabled:text-stone-600"
       >
         {cooldown > 0 ? `Gửi lại OTP sau ${cooldown}s` : 'Gửi lại OTP'}
       </button>

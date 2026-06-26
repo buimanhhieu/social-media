@@ -11,8 +11,8 @@ import { useUserPosts } from '@features/post';
 function Stat({ n, label }: { n: number; label: string }) {
   return (
     <div className="text-sm">
-      <span className="font-semibold text-zinc-900 dark:text-white">{n.toLocaleString('vi-VN')}</span>{' '}
-      <span className="text-zinc-600 dark:text-zinc-400">{label}</span>
+      <span className="font-semibold text-stone-900 dark:text-white">{n.toLocaleString('vi-VN')}</span>{' '}
+      <span className="text-stone-600 dark:text-stone-400">{label}</span>
     </div>
   );
 }
@@ -46,11 +46,11 @@ export function UserProfilePage() {
   );
 
   if (isLoading) {
-    return shell(<p className="py-16 text-center text-sm text-zinc-500">Đang tải…</p>);
+    return shell(<p className="py-16 text-center text-sm text-stone-500">Đang tải…</p>);
   }
   if (isError || !profile) {
     return shell(
-      <p className="py-16 text-center text-sm text-zinc-500">Không tìm thấy người dùng @{username}.</p>,
+      <p className="py-16 text-center text-sm text-stone-500">Không tìm thấy người dùng @{username}.</p>,
     );
   }
 
@@ -67,7 +67,7 @@ export function UserProfilePage() {
 
         <div className="flex-1">
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap">
-            <h1 className="flex items-center gap-1.5 text-2xl font-light text-zinc-900 dark:text-white">
+            <h1 className="flex items-center gap-1.5 text-2xl font-light text-stone-900 dark:text-white">
               {profile.username}
               {profile.isVerified && <BadgeCheck className="h-5 w-5 fill-accent text-white" />}
             </h1>
@@ -105,10 +105,10 @@ export function UserProfilePage() {
 
           <div className="mt-4">
             {profile.displayName && (
-              <p className="font-semibold text-zinc-900 dark:text-white">{profile.displayName}</p>
+              <p className="font-semibold text-stone-900 dark:text-white">{profile.displayName}</p>
             )}
             {profile.bio && (
-              <p className="mt-0.5 whitespace-pre-line text-sm text-zinc-700 dark:text-zinc-300">
+              <p className="mt-0.5 whitespace-pre-line text-sm text-stone-700 dark:text-stone-300">
                 {profile.bio}
               </p>
             )}
@@ -126,8 +126,8 @@ export function UserProfilePage() {
         </div>
       </div>
 
-      <div className="mt-8 flex justify-center border-t border-zinc-200 dark:border-zinc-800">
-        <span className="-mt-px flex items-center gap-1.5 border-t border-zinc-900 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-zinc-900 dark:border-white dark:text-white">
+      <div className="mt-8 flex justify-center border-t border-line dark:border-line-dark">
+        <span className="-mt-px flex items-center gap-1.5 border-t border-stone-900 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-stone-900 dark:border-white dark:text-white">
           <Grid3x3 className="h-4 w-4" /> Bài viết
         </span>
       </div>
@@ -138,14 +138,14 @@ export function UserProfilePage() {
             <Link
               key={p.id}
               to={`/p/${p.id}`}
-              className="aspect-square overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800"
+              className="aspect-square overflow-hidden rounded-md bg-canvas dark:bg-canvas-dark"
             >
               <img src={p.thumbnailUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
             </Link>
           ))}
         </div>
       ) : (
-        <p className="py-12 text-center text-sm text-zinc-500">Chưa có bài viết nào.</p>
+        <p className="py-12 text-center text-sm text-stone-500">Chưa có bài viết nào.</p>
       )}
     </section>,
   );

@@ -91,7 +91,7 @@ export function SettingsPage() {
       onLogout={() => logout.mutate(undefined, { onSettled: () => navigate('/login') })}
     >
       <form onSubmit={onSave} className="mx-auto max-w-md space-y-6">
-        <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">
+        <h1 className="text-xl font-bold tracking-tight text-stone-900 dark:text-white">
           Chỉnh sửa trang cá nhân
         </h1>
 
@@ -109,7 +109,7 @@ export function SettingsPage() {
             >
               Đổi ảnh đại diện
             </button>
-            <p className="text-xs text-zinc-500">JPG hoặc PNG.</p>
+            <p className="text-xs text-stone-500">JPG hoặc PNG.</p>
           </div>
           <input ref={fileRef} type="file" accept="image/*" hidden onChange={onFileChange} />
         </div>
@@ -123,7 +123,7 @@ export function SettingsPage() {
         />
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="bio" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <label htmlFor="bio" className="text-sm font-medium text-stone-700 dark:text-stone-300">
             Tiểu sử
           </label>
           <textarea
@@ -133,9 +133,9 @@ export function SettingsPage() {
             rows={3}
             maxLength={150}
             placeholder="Giới thiệu đôi nét về bạn…"
-            className="w-full resize-none rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 transition-colors placeholder:text-zinc-400 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="w-full resize-none rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-stone-900 transition-colors placeholder:text-stone-400 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:border-line-dark dark:bg-surface-dark dark:text-stone-100"
           />
-          <span className="text-right text-xs text-zinc-400">{bio.length}/150</span>
+          <span className="text-right text-xs text-stone-400">{bio.length}/150</span>
         </div>
 
         <Input
@@ -146,12 +146,12 @@ export function SettingsPage() {
           placeholder="vd: example.com"
         />
 
-        <div className="flex items-center justify-between rounded-xl border border-zinc-200 px-4 py-3 dark:border-zinc-800">
+        <div className="flex items-center justify-between rounded-xl border border-line px-4 py-3 dark:border-line-dark">
           <div className="pr-4">
-            <label htmlFor="priv" className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
+            <label htmlFor="priv" className="text-sm font-medium text-stone-800 dark:text-stone-200">
               Tài khoản riêng tư
             </label>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-stone-500">
               Chỉ người theo dõi mới xem được bài viết của bạn.
             </p>
           </div>

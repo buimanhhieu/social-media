@@ -6,7 +6,16 @@
 @theme {
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-display: 'Grand Hotel', cursive;
-  --color-accent: #e1306c;
+
+  /* Theme "Giấy & Rừng" — accent xanh rêu, neutral giấy/gỗ ấm. */
+  --color-accent: #4d7c0f;
+
+  --color-canvas: #f3eee1; /* nền giấy (light) */
+  --color-canvas-dark: #1b1712; /* nền gỗ sẫm (dark) */
+  --color-surface: #fbf8f0; /* thẻ giấy (light) */
+  --color-surface-dark: #251f18; /* thẻ gỗ (dark) */
+  --color-line: #e7dfcd; /* viền ấm (light) */
+  --color-line-dark: #3a3026; /* viền gỗ (dark) */
 }
 
 html,
@@ -16,31 +25,26 @@ body,
 }
 
 body {
-  background-color: #fafafa;
-  color: #18181b;
+  background-color: var(--color-canvas);
+  color: #2c2a24; /* mực nâu espresso */
+  /* Texture hạt giấy rất nhẹ */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
 }
 
 @media (prefers-color-scheme: dark) {
   body {
-    background-color: #09090b;
-    color: #fafafa;
+    background-color: var(--color-canvas-dark);
+    color: #ece6d8; /* kem */
   }
 }
 
-/* Viper Study brand identity — used only on the auth brand panel and the wordmark. */
+/* Viper Study brand identity — lá → rêu → gỗ. */
 .brand-gradient {
-  background-image: linear-gradient(
-    135deg,
-    #feda75 0%,
-    #fa7e1e 25%,
-    #d62976 50%,
-    #962fbf 75%,
-    #4f5bd5 100%
-  );
+  background-image: linear-gradient(135deg, #7a9b3e 0%, #4d7c0f 45%, #6b5436 100%);
 }
 
 .brand-text-gradient {
-  background-image: linear-gradient(135deg, #fa7e1e 0%, #d62976 50%, #962fbf 100%);
+  background-image: linear-gradient(135deg, #5a7d2a 0%, #4d7c0f 50%, #6b5436 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

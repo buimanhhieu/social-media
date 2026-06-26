@@ -13,9 +13,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const variants: Record<Variant, string> = {
   primary: 'bg-accent text-white shadow-sm shadow-accent/30 hover:brightness-110 disabled:opacity-50',
   secondary:
-    'border border-zinc-300 bg-white text-zinc-800 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800',
+    'border border-line bg-surface text-stone-800 hover:bg-canvas disabled:opacity-50 dark:border-line-dark dark:bg-surface-dark dark:text-stone-100 dark:hover:bg-stone-800',
   ghost:
-    'bg-transparent text-zinc-600 hover:bg-zinc-100 disabled:opacity-50 dark:text-zinc-300 dark:hover:bg-zinc-800',
+    'bg-transparent text-stone-600 hover:bg-canvas disabled:opacity-50 dark:text-stone-300 dark:hover:bg-stone-800',
 };
 
 const sizes: Record<Size, string> = {
@@ -33,7 +33,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ref={ref}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 dark:focus-visible:ring-offset-zinc-950',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50 dark:focus-visible:ring-offset-stone-950',
         'active:scale-[0.98] disabled:cursor-not-allowed disabled:active:scale-100',
         'motion-reduce:transition-none motion-reduce:active:scale-100',
         variants[variant],

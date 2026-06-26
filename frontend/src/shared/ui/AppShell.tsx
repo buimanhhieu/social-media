@@ -28,9 +28,9 @@ export function AppShell({ children, user, onLogout, loggingOut }: AppShellProps
   const { pathname } = useLocation();
 
   return (
-    <div className="min-h-dvh bg-zinc-50 dark:bg-zinc-950">
+    <div className="min-h-dvh bg-canvas dark:bg-canvas-dark">
       {/* Rail dọc bên trái — desktop */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-zinc-200 bg-white px-3 py-5 lg:flex dark:border-zinc-800 dark:bg-zinc-900">
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-line bg-surface px-3 py-5 lg:flex dark:border-line-dark dark:bg-surface-dark">
         <Link to="/" aria-label="Trang chủ" className="mb-8 px-3">
           <Logo className="text-3xl" />
         </Link>
@@ -43,7 +43,7 @@ export function AppShell({ children, user, onLogout, loggingOut }: AppShellProps
                 'flex items-center gap-4 rounded-xl px-3 py-2.5 text-[15px] transition-colors',
                 pathname === to
                   ? 'font-semibold text-accent'
-                  : 'text-zinc-700 hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800',
+                  : 'text-stone-700 hover:bg-canvas dark:text-stone-200 dark:hover:bg-stone-800',
               )}
             >
               <Icon className="h-6 w-6" strokeWidth={pathname === to ? 2.4 : 2} />
@@ -55,7 +55,7 @@ export function AppShell({ children, user, onLogout, loggingOut }: AppShellProps
 
       {/* Vùng nội dung */}
       <div className="lg:pl-60">
-        <header className="sticky top-0 z-20 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/80">
+        <header className="sticky top-0 z-20 border-b border-line bg-surface/80 backdrop-blur dark:border-line-dark dark:bg-surface-dark/80">
           <div className="flex h-16 items-center justify-between px-4">
             {/* Mobile: logo + nav (rail bị ẩn) */}
             <div className="flex items-center gap-1 lg:hidden">
@@ -71,7 +71,7 @@ export function AppShell({ children, user, onLogout, loggingOut }: AppShellProps
                     'rounded-xl p-2 transition-colors',
                     pathname === to
                       ? 'text-accent'
-                      : 'text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800',
+                      : 'text-stone-600 hover:bg-canvas dark:text-stone-300 dark:hover:bg-stone-800',
                   )}
                 >
                   <Icon className="h-5 w-5" strokeWidth={2} />
@@ -116,15 +116,15 @@ function ProfileMenu({ user, onLogout, loggingOut }: Omit<AppShellProps, 'childr
             onClick={() => setOpen(false)}
             className="fixed inset-0 z-30 cursor-default"
           />
-          <div className="absolute right-0 z-40 mt-2 w-60 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl shadow-zinc-900/10 dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="flex items-center gap-3 border-b border-zinc-100 px-4 py-3 dark:border-zinc-800">
+          <div className="absolute right-0 z-40 mt-2 w-60 overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-stone-900/10 dark:border-line-dark dark:bg-surface-dark">
+            <div className="flex items-center gap-3 border-b border-line px-4 py-3 dark:border-line-dark">
               <Avatar src={user?.avatarUrl} name={name} size="md" />
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-zinc-900 dark:text-white">
+                <p className="truncate text-sm font-semibold text-stone-900 dark:text-white">
                   {user?.username ?? '…'}
                 </p>
                 {user?.displayName && (
-                  <p className="truncate text-xs text-zinc-500">{user.displayName}</p>
+                  <p className="truncate text-xs text-stone-500">{user.displayName}</p>
                 )}
               </div>
             </div>
@@ -132,7 +132,7 @@ function ProfileMenu({ user, onLogout, loggingOut }: Omit<AppShellProps, 'childr
             <Link
               to="/profile"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800"
+              className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 transition-colors hover:bg-canvas dark:text-stone-200 dark:hover:bg-stone-800"
             >
               <User className="h-4 w-4" strokeWidth={2} />
               Trang cá nhân
@@ -141,7 +141,7 @@ function ProfileMenu({ user, onLogout, loggingOut }: Omit<AppShellProps, 'childr
             <Link
               to="/settings"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800"
+              className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 transition-colors hover:bg-canvas dark:text-stone-200 dark:hover:bg-stone-800"
             >
               <Settings className="h-4 w-4" strokeWidth={2} />
               Cài đặt
@@ -151,7 +151,7 @@ function ProfileMenu({ user, onLogout, loggingOut }: Omit<AppShellProps, 'childr
               type="button"
               onClick={onLogout}
               disabled={loggingOut}
-              className="flex w-full items-center gap-3 border-t border-zinc-100 px-4 py-2.5 text-left text-sm text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50 dark:border-zinc-800 dark:text-red-400 dark:hover:bg-red-950/40"
+              className="flex w-full items-center gap-3 border-t border-line px-4 py-2.5 text-left text-sm text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50 dark:border-line-dark dark:text-red-400 dark:hover:bg-red-950/40"
             >
               <LogOut className="h-4 w-4" strokeWidth={2} />
               {loggingOut ? 'Đang đăng xuất…' : 'Đăng xuất'}

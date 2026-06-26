@@ -65,13 +65,13 @@ export function CreatePostForm({ onCreated }: { onCreated?: () => void }) {
 
   return (
     <form onSubmit={onSubmit} className="mx-auto max-w-md space-y-5">
-      <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">Tạo bài viết</h1>
+      <h1 className="text-xl font-bold tracking-tight text-stone-900 dark:text-white">Tạo bài viết</h1>
 
       {!preview ? (
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="flex aspect-square w-full flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-zinc-300 text-zinc-500 transition-colors hover:border-accent hover:text-accent dark:border-zinc-700"
+          className="flex aspect-square w-full flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-line text-stone-500 transition-colors hover:border-accent hover:text-accent dark:border-line-dark"
         >
           <ImagePlus className="h-10 w-10" strokeWidth={1.5} />
           <span className="text-sm font-medium">Chọn ảnh để đăng</span>
@@ -92,7 +92,7 @@ export function CreatePostForm({ onCreated }: { onCreated?: () => void }) {
       <input ref={inputRef} type="file" accept="image/*" hidden onChange={onFileChange} />
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="caption" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label htmlFor="caption" className="text-sm font-medium text-stone-700 dark:text-stone-300">
           Chú thích
         </label>
         <textarea
@@ -102,7 +102,7 @@ export function CreatePostForm({ onCreated }: { onCreated?: () => void }) {
           rows={3}
           maxLength={2200}
           placeholder="Viết gì đó về khoảnh khắc này…"
-          className="w-full resize-none rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 transition-colors placeholder:text-zinc-400 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+          className="w-full resize-none rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-stone-900 transition-colors placeholder:text-stone-400 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 dark:border-line-dark dark:bg-surface-dark dark:text-stone-100"
         />
       </div>
 
