@@ -23,6 +23,7 @@
         <jjwt.version>0.12.5</jjwt.version>
         <aws.sdk.version>2.25.0</aws.sdk.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
+        <jave.version>3.5.0</jave.version>
         <springdoc.version>2.5.0</springdoc.version>
         <testcontainers.version>1.21.3</testcontainers.version>
         <lombok.version>1.18.42</lombok.version>
@@ -107,6 +108,12 @@
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
             <version>${aws.sdk.version}</version>
+        </dependency>
+        <!-- JAVE2 — ffmpeg đóng gói, dùng để tách audio từ video -->
+        <dependency>
+            <groupId>ws.schild</groupId>
+            <artifactId>jave-all-deps</artifactId>
+            <version>${jave.version}</version>
         </dependency>
 
         <!-- ===== API DOCS ===== -->
