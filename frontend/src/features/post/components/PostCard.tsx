@@ -1,6 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, MapPin, MessageCircle } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Heart,
+  MapPin,
+  MessageCircle,
+  Music,
+  Pause,
+  Play,
+} from 'lucide-react';
 import { Avatar } from '@shared/ui/Avatar';
 import { cn } from '@shared/lib/cn';
 import { timeAgo } from '@shared/lib/timeAgo';
@@ -13,6 +22,9 @@ export function PostCard({ post }: { post: PostResponse }) {
   const [liked, setLiked] = useState(post.likedByMe);
   const [likeCount, setLikeCount] = useState(post.likeCount);
   const [showComments, setShowComments] = useState(false);
+  const [idx, setIdx] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const like = useLikePost();
   const unlike = useUnlikePost();
 
@@ -23,7 +35,19 @@ export function PostCard({ post }: { post: PostResponse }) {
   }, [post.likedByMe, post.likeCount]);
 
   const author = post.author;
-  const cover = post.media[0];
+  const cover = post.media[idx];
+
+  const toggleMusic = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (playing) {
+      audio.pause();
+      setPlaying(false);
+    } else {
+      void audio.play();
+      setPlaying(true);
+    }
+  };
 
   const toggleLike = () => {
     const next = !liked;
@@ -71,12 +95,58 @@ export function PostCard({ post }: { post: PostResponse }) {
               if (!liked) toggleLike();
             }}
           />
+
           {post.media.length > 1 && (
-            <span className="absolute right-3 top-3 rounded-full bg-black/60 px-2 py-0.5 text-xs font-medium text-white">
-              1/{post.media.length}
-            </span>
+            <>
+              <span className="absolute right-3 top-3 rounded-full bg-black/60 px-2 py-0.5 text-xs font-medium text-white">
+                {idx + 1}/{post.media.length}
+              </span>
+              {idx > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setIdx((i) => i - 1)}
+                  aria-label="Ảnh trước"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-1 text-white hover:bg-black/60"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+              )}
+              {idx < post.media.length - 1 && (
+                <button
+                  type="button"
+                  onClick={() => setIdx((i) => i + 1)}
+                  aria-label="Ảnh sau"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-1 text-white hover:bg-black/60"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              )}
+              <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
+                {post.media.map((_, i) => (
+                  <span
+                    key={i}
+                    className={cn('h-1.5 w-1.5 rounded-full', i === idx ? 'bg-white' : 'bg-white/50')}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+
+          {post.music && (
+            <button
+              type="button"
+              onClick={toggleMusic}
+              className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full bg-black/60 py-1 pl-2 pr-3 text-xs font-medium text-white backdrop-blur"
+            >
+              {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+              <Music className="h-3 w-3" />
+              <span className="max-w-36 truncate">{post.music.name}</span>
+            </button>
           )}
         </div>
+      )}
+      {post.music && (
+        <audio ref={audioRef} src={post.music.url} onEnded={() => setPlaying(false)} className="hidden" />
       )}
 
       <div className="flex items-center gap-5 px-4 pt-3">
