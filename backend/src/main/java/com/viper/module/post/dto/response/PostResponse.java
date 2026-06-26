@@ -14,6 +14,7 @@ public record PostResponse(
         String location,
         UserSummary author,
         List<MediaItem> media,
+        MusicInfo music,
         long likeCount,
         long commentCount,
         boolean likedByMe,
@@ -21,13 +22,15 @@ public record PostResponse(
 ) {
     public record MediaItem(String url, String thumbnailUrl, String type) {}
 
-    public static PostResponse from(Post post, UserSummary author,
+    public record MusicInfo(Long id, String name, String url) {}
+
+    public static PostResponse from(Post post, UserSummary author, MusicInfo music,
                                     long likeCount, long commentCount, boolean likedByMe) {
         List<MediaItem> media = post.getMediaList().stream()
                 .map(m -> new MediaItem(m.getMediaUrl(), m.getThumbUrl(), m.getMediaType()))
                 .toList();
         return new PostResponse(
                 post.getId(), post.getCaption(), post.getType(), post.getLocation(),
-                author, media, likeCount, commentCount, likedByMe, post.getCreatedAt());
+                author, media, music, likeCount, commentCount, likedByMe, post.getCreatedAt());
     }
 }

@@ -32,6 +32,10 @@ public class Post extends BaseEntity {
     @Column(name = "is_hidden", nullable = false)
     private boolean isHidden = false;
 
+    /** Nhạc nền (id trong media_schema.music); null nếu không có. */
+    @Column(name = "music_id")
+    private Long musicId;
+
     @Builder.Default
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderIndex ASC")

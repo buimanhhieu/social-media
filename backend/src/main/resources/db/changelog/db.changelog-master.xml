@@ -13,8 +13,10 @@
     <include file="db/changelog/user/002_create_follows.sql"/>
     <include file="db/changelog/user/003_add_last_password_change.sql"/>
     <include file="db/changelog/media/001_create_media_files.sql"/>
+    <include file="db/changelog/media/002_create_music.sql"/>
     <include file="db/changelog/post/001_create_posts.sql"/>
     <include file="db/changelog/post/002_create_likes_comments.sql"/>
+    <include file="db/changelog/post/003_add_music.sql"/>
     <include file="db/changelog/story/001_create_stories.sql"/>
     <include file="db/changelog/chat/001_create_chat.sql"/>
     <include file="db/changelog/notification/001_create_notifications.sql"/>

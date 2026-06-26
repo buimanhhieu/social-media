@@ -2,7 +2,9 @@ package com.viper.module.post.service;
 
 import com.viper.core.utils.PageResponse;
 import com.viper.module.media.dto.response.MediaRef;
+import com.viper.module.media.dto.response.MusicRef;
 import com.viper.module.media.service.MediaQueryService;
+import com.viper.module.media.service.MusicQueryService;
 import com.viper.module.post.dto.request.CreatePostRequest;
 import com.viper.module.post.dto.response.PostResponse;
 import com.viper.module.post.dto.response.PostSummary;
@@ -31,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -45,6 +48,7 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final UserQueryService userQueryService;
     private final MediaQueryService mediaQueryService;
+    private final MusicQueryService musicQueryService;
     private final ApplicationEventPublisher events;
 
     public PostResponse createPost(Long authorId, CreatePostRequest req) {
@@ -56,6 +60,7 @@ public class PostService {
                 .caption(req.caption())
                 .type(req.type() != null ? req.type() : PostType.IMAGE)
                 .location(req.location())
+                .musicId(req.musicId())
                 .isHidden(false)
                 .build();
 
@@ -122,7 +127,8 @@ public class PostService {
         long commentCount = commentRepository.countByPostId(post.getId());
         boolean likedByMe = currentUserId != null
                 && likeRepository.existsByUserIdAndPostId(currentUserId, post.getId());
-        return PostResponse.from(post, author, likeCount, commentCount, likedByMe);
+        PostResponse.MusicInfo music = toMusicInfo(musicQueryService.getById(post.getMusicId()));
+        return PostResponse.from(post, author, music, likeCount, commentCount, likedByMe);
     }
 
     /** Dựng PostResponse từ dữ liệu đã nạp sẵn theo lô (cho feed) — không phát sinh query mới. */
@@ -131,16 +137,24 @@ public class PostService {
         long likeCount = ctx.likeCounts().getOrDefault(post.getId(), 0L);
         long commentCount = ctx.commentCounts().getOrDefault(post.getId(), 0L);
         boolean likedByMe = ctx.likedPostIds().contains(post.getId());
-        return PostResponse.from(post, author, likeCount, commentCount, likedByMe);
+        PostResponse.MusicInfo music = post.getMusicId() == null ? null
+                : toMusicInfo(ctx.musics().get(post.getMusicId()));
+        return PostResponse.from(post, author, music, likeCount, commentCount, likedByMe);
+    }
+
+    private static PostResponse.MusicInfo toMusicInfo(MusicRef ref) {
+        return ref == null ? null : new PostResponse.MusicInfo(ref.id(), ref.name(), ref.url());
     }
 
     /** Nạp author + đếm like/comment + tập post đã-like cho cả trang trong vài query, tránh N+1. */
     private BatchContext loadBatchContext(List<Post> posts, Long currentUserId) {
         if (posts.isEmpty()) {
-            return new BatchContext(Map.of(), Map.of(), Map.of(), Set.of());
+            return new BatchContext(Map.of(), Map.of(), Map.of(), Set.of(), Map.of());
         }
         List<Long> postIds = posts.stream().map(Post::getId).toList();
         List<Long> authorIds = posts.stream().map(Post::getAuthorId).distinct().toList();
+        List<Long> musicIds = posts.stream()
+                .map(Post::getMusicId).filter(Objects::nonNull).distinct().toList();
 
         Map<Long, UserSummary> authors = userQueryService.getUserSummariesByIds(authorIds).stream()
                 .collect(Collectors.toMap(UserSummary::id, Function.identity()));
@@ -149,15 +163,18 @@ public class PostService {
         Map<Long, Long> commentCounts = commentRepository.countByPostIds(postIds).stream()
                 .collect(Collectors.toMap(PostCount::postId, PostCount::count));
         Set<Long> likedPostIds = new HashSet<>(likeRepository.findLikedPostIds(currentUserId, postIds));
+        Map<Long, MusicRef> musics = musicQueryService.getByIds(musicIds).stream()
+                .collect(Collectors.toMap(MusicRef::id, Function.identity()));
 
-        return new BatchContext(authors, likeCounts, commentCounts, likedPostIds);
+        return new BatchContext(authors, likeCounts, commentCounts, likedPostIds, musics);
     }
 
     private record BatchContext(
             Map<Long, UserSummary> authors,
             Map<Long, Long> likeCounts,
             Map<Long, Long> commentCounts,
-            Set<Long> likedPostIds) {}
+            Set<Long> likedPostIds,
+            Map<Long, MusicRef> musics) {}
 
     public void deletePost(Long id, Long currentUserId) {
         Post post = postRepository.findById(id)
