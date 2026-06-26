@@ -1,11 +1,13 @@
 import { type ChangeEvent, useRef, useState } from 'react';
-import { ChevronLeft, ImagePlus, Music as MusicIcon, Play, Plus, Square, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ImagePlus, Music as MusicIcon, Plus, X } from 'lucide-react';
 import { Button } from '@shared/ui/Button';
 import { Input } from '@shared/ui/Input';
 import { cn } from '@shared/lib/cn';
 import { bakeImage } from '@shared/lib/bakeImage';
 import { getFriendlyMessage } from '@shared/api/errors';
-import { useCreatePost, useMusicList, useUploadMedia, useUploadMusic } from '../api/hooks';
+import { useCreatePost, useUploadMedia } from '../api/hooks';
+import { MusicPickerModal } from './MusicPickerModal';
+import type { MusicTrack } from '../types';
 
 interface ImgItem {
   id: string;
@@ -38,7 +40,8 @@ export function CreatePostWizard({ onCreated }: { onCreated?: () => void }) {
   const [active, setActive] = useState(0);
   const [caption, setCaption] = useState('');
   const [location, setLocation] = useState('');
-  const [musicId, setMusicId] = useState<number | null>(null);
+  const [music, setMusic] = useState<MusicTrack | null>(null);
+  const [musicOpen, setMusicOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -92,7 +95,7 @@ export function CreatePostWizard({ onCreated }: { onCreated?: () => void }) {
         mediaIds,
         caption: caption.trim() || undefined,
         location: location.trim() || undefined,
-        musicId: musicId ?? undefined,
+        musicId: music?.id,
       });
       images.forEach((i) => URL.revokeObjectURL(i.url));
       onCreated?.();
@@ -255,7 +258,31 @@ export function CreatePostWizard({ onCreated }: { onCreated?: () => void }) {
             maxLength={100}
           />
 
-          <MusicPicker musicId={musicId} onSelect={setMusicId} />
+          {/* Chọn nhạc — mở khung đầy đủ */}
+          <div className="flex items-center gap-3 rounded-xl border border-line px-3.5 py-2.5 dark:border-line-dark">
+            <MusicIcon className="h-5 w-5 shrink-0 text-accent" />
+            <button
+              type="button"
+              onClick={() => setMusicOpen(true)}
+              className="min-w-0 flex-1 truncate text-left text-sm text-stone-700 dark:text-stone-200"
+            >
+              {music ? music.name : 'Thêm nhạc'}
+            </button>
+            {music ? (
+              <button
+                type="button"
+                onClick={() => setMusic(null)}
+                aria-label="Bỏ nhạc"
+                className="text-stone-400 hover:text-stone-700 dark:hover:text-stone-200"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            ) : (
+              <button type="button" onClick={() => setMusicOpen(true)} aria-label="Chọn nhạc" className="text-stone-400">
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            )}
+          </div>
 
           {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
@@ -266,6 +293,17 @@ export function CreatePostWizard({ onCreated }: { onCreated?: () => void }) {
       )}
 
       {step !== 3 && error && <p className="mt-4 text-sm text-red-600 dark:text-red-400">{error}</p>}
+
+      {musicOpen && (
+        <MusicPickerModal
+          selectedId={music?.id ?? null}
+          onSelect={(t) => {
+            setMusic(t);
+            setMusicOpen(false);
+          }}
+          onClose={() => setMusicOpen(false)}
+        />
+      )}
     </div>
   );
 }
@@ -299,115 +337,3 @@ function Slider({
   );
 }
 
-function MusicPicker({ musicId, onSelect }: { musicId: number | null; onSelect: (id: number | null) => void }) {
-  const { data: tracks } = useMusicList();
-  const uploadMusic = useUploadMusic();
-  const [importing, setImporting] = useState(false);
-  const [name, setName] = useState('');
-  const [file, setFile] = useState<File | null>(null);
-  const [playingId, setPlayingId] = useState<number | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const musicFileRef = useRef<HTMLInputElement>(null);
-
-  const togglePlay = (id: number, url: string) => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (playingId === id) {
-      audio.pause();
-      setPlayingId(null);
-    } else {
-      audio.src = url;
-      void audio.play();
-      setPlayingId(id);
-    }
-  };
-
-  const doImport = async () => {
-    if (!file || !name.trim()) return;
-    const track = await uploadMusic.mutateAsync({ file, name: name.trim() });
-    onSelect(track.id);
-    setImporting(false);
-    setName('');
-    setFile(null);
-  };
-
-  return (
-    <div>
-      <div className="mb-2 flex items-center justify-between">
-        <span className="flex items-center gap-1.5 text-sm font-medium text-stone-700 dark:text-stone-200">
-          <MusicIcon className="h-4 w-4" /> Nhạc nền
-        </span>
-        <button
-          type="button"
-          onClick={() => setImporting((v) => !v)}
-          className="text-sm font-semibold text-accent"
-        >
-          {importing ? 'Đóng' : 'Import từ file'}
-        </button>
-      </div>
-
-      {importing && (
-        <div className="mb-3 space-y-2 rounded-xl border border-line p-3 dark:border-line-dark">
-          <input
-            ref={musicFileRef}
-            type="file"
-            accept="audio/*,video/*"
-            hidden
-            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-          />
-          <button
-            type="button"
-            onClick={() => musicFileRef.current?.click()}
-            className="w-full rounded-lg border border-dashed border-line px-3 py-2 text-sm text-stone-600 hover:border-accent dark:border-line-dark dark:text-stone-300"
-          >
-            {file ? file.name : 'Chọn file nhạc hoặc video…'}
-          </button>
-          <p className="text-xs text-stone-400">Chọn video thì hệ thống sẽ tự tách phần âm thanh.</p>
-          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Tên bài nhạc" maxLength={150} />
-          <Button size="sm" fullWidth disabled={!file || !name.trim() || uploadMusic.isPending} onClick={doImport}>
-            {uploadMusic.isPending ? 'Đang xử lý…' : 'Tải lên & chọn'}
-          </Button>
-        </div>
-      )}
-
-      <audio ref={audioRef} onEnded={() => setPlayingId(null)} className="hidden" />
-
-      <ul className="max-h-56 space-y-1 overflow-y-auto">
-        <li>
-          <button
-            type="button"
-            onClick={() => onSelect(null)}
-            className={cn(
-              'w-full rounded-xl px-3 py-2 text-left text-sm transition-colors',
-              musicId === null ? 'bg-accent/10 font-semibold text-accent' : 'text-stone-600 hover:bg-surface dark:text-stone-300 dark:hover:bg-surface-dark',
-            )}
-          >
-            Không dùng nhạc
-          </button>
-        </li>
-        {(tracks ?? []).map((t) => (
-          <li key={t.id} className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => togglePlay(t.id, t.url)}
-              className="shrink-0 rounded-full p-1.5 text-stone-600 hover:bg-surface dark:text-stone-300 dark:hover:bg-surface-dark"
-              aria-label="Nghe thử"
-            >
-              {playingId === t.id ? <Square className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-            </button>
-            <button
-              type="button"
-              onClick={() => onSelect(t.id)}
-              className={cn(
-                'flex-1 truncate rounded-xl px-3 py-2 text-left text-sm transition-colors',
-                musicId === t.id ? 'bg-accent/10 font-semibold text-accent' : 'text-stone-700 hover:bg-surface dark:text-stone-200 dark:hover:bg-surface-dark',
-              )}
-            >
-              {t.name}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
