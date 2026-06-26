@@ -33,7 +33,11 @@ export function AppShell({ children, user, onLogout, loggingOut }: AppShellProps
       <header className="fixed inset-x-0 top-0 z-40 h-16 bg-canvas/80 backdrop-blur dark:bg-canvas-dark/80">
         <div className="flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-1">
-            <Link to="/" aria-label="Trang chủ">
+            <Link
+              to="/"
+              aria-label="Trang chủ"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
               <Logo className="text-2xl" />
             </Link>
             {/* Nav icon cho mobile (rail bị ẩn) */}
