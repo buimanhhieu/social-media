@@ -51,7 +51,16 @@ export const mediaApi = {
 };
 
 export const musicApi = {
-  list: () => apiClient.get<MusicTrack[]>('/api/music').then((r) => r.data),
+  explore: (q?: string) =>
+    apiClient.get<MusicTrack[]>('/api/music', { params: q ? { q } : {} }).then((r) => r.data),
+
+  suggested: () => apiClient.get<MusicTrack[]>('/api/music/suggested').then((r) => r.data),
+
+  saved: () => apiClient.get<MusicTrack[]>('/api/music/saved').then((r) => r.data),
+
+  save: (id: number) => apiClient.post<void>(`/api/music/${id}/save`).then((r) => r.data),
+
+  unsave: (id: number) => apiClient.delete<void>(`/api/music/${id}/save`).then((r) => r.data),
 
   upload: (file: File, name: string) => {
     const form = new FormData();

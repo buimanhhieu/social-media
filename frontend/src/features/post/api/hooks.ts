@@ -42,8 +42,27 @@ export function useUploadMedia() {
   return useMutation({ mutationFn: (file: File) => mediaApi.upload(file) });
 }
 
-export function useMusicList() {
-  return useQuery({ queryKey: ['music'], queryFn: musicApi.list });
+export type MusicTab = 'suggested' | 'explore' | 'saved';
+
+export function useMusicTab(tab: MusicTab, q: string) {
+  return useQuery({
+    queryKey: ['music', tab, tab === 'explore' ? q.trim() : ''],
+    queryFn: () =>
+      tab === 'suggested'
+        ? musicApi.suggested()
+        : tab === 'saved'
+          ? musicApi.saved()
+          : musicApi.explore(q.trim() || undefined),
+  });
+}
+
+export function useToggleSaveMusic() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, saved }: { id: number; saved: boolean }) =>
+      saved ? musicApi.unsave(id) : musicApi.save(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['music'] }),
+  });
 }
 
 export function useUploadMusic() {

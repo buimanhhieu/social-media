@@ -21,6 +21,7 @@ export interface MusicTrack {
   id: number;
   name: string;
   url: string;
+  saved: boolean;
 }
 
 export interface PostResponse {
