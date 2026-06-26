@@ -29,14 +29,39 @@ export function AppShell({ children, user, onLogout, loggingOut }: AppShellProps
 
   return (
     <div className="min-h-dvh bg-canvas dark:bg-canvas-dark">
-      {/* Rail dọc bên trái — desktop. Mặc định chỉ icon, hover mới mở rộng (overlay). */}
-      <aside className="group fixed inset-y-0 left-0 z-30 hidden w-18 flex-col overflow-hidden bg-canvas px-2.5 py-5 transition-[width,box-shadow] duration-200 hover:w-60 hover:shadow-xl hover:shadow-stone-900/5 lg:flex dark:bg-canvas-dark">
-        <Link to="/" aria-label="Trang chủ" className="mb-8 flex h-9 items-center px-3">
-          <span className="brand-text-gradient font-display text-4xl leading-none group-hover:hidden">V</span>
-          <span className="hidden whitespace-nowrap group-hover:block">
-            <Logo className="text-3xl" />
-          </span>
-        </Link>
+      {/* Top bar full-width — wordmark đứng riêng, không bao giờ bị cắt */}
+      <header className="fixed inset-x-0 top-0 z-40 h-16 bg-canvas/80 backdrop-blur dark:bg-canvas-dark/80">
+        <div className="flex h-16 items-center justify-between px-4">
+          <div className="flex items-center gap-1">
+            <Link to="/" aria-label="Trang chủ">
+              <Logo className="text-2xl" />
+            </Link>
+            {/* Nav icon cho mobile (rail bị ẩn) */}
+            <div className="ml-1 flex items-center gap-1 lg:hidden">
+              {NAV.map(({ to, label, icon: Icon }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  aria-label={label}
+                  className={cn(
+                    'rounded-xl p-2 transition-colors',
+                    pathname === to
+                      ? 'text-accent'
+                      : 'text-stone-600 hover:bg-surface dark:text-stone-300 dark:hover:bg-surface-dark',
+                  )}
+                >
+                  <Icon className="h-5 w-5" strokeWidth={2} />
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <ProfileMenu user={user} onLogout={onLogout} loggingOut={loggingOut} />
+        </div>
+      </header>
+
+      {/* Rail dọc bên trái (dưới top bar) — mặc định chỉ icon, hover mới mở rộng (overlay) */}
+      <aside className="group fixed bottom-0 left-0 top-16 z-30 hidden w-18 flex-col overflow-hidden bg-canvas px-2.5 py-4 transition-[width,box-shadow] duration-200 hover:w-60 hover:shadow-xl hover:shadow-stone-900/5 lg:flex dark:bg-canvas-dark">
         <nav className="flex flex-col gap-1">
           {NAV.map(({ to, label, icon: Icon }) => (
             <Link
@@ -58,37 +83,7 @@ export function AppShell({ children, user, onLogout, loggingOut }: AppShellProps
       </aside>
 
       {/* Vùng nội dung */}
-      <div className="lg:pl-18">
-        <header className="sticky top-0 z-20 bg-canvas/80 backdrop-blur dark:bg-canvas-dark/80">
-          <div className="flex h-16 items-center justify-between px-4">
-            {/* Mobile: logo + nav (rail bị ẩn) */}
-            <div className="flex items-center gap-1 lg:hidden">
-              <Link to="/" aria-label="Trang chủ" className="mr-2">
-                <Logo className="text-2xl" />
-              </Link>
-              {NAV.map(({ to, label, icon: Icon }) => (
-                <Link
-                  key={to}
-                  to={to}
-                  aria-label={label}
-                  className={cn(
-                    'rounded-xl p-2 transition-colors',
-                    pathname === to
-                      ? 'text-accent'
-                      : 'text-stone-600 hover:bg-canvas dark:text-stone-300 dark:hover:bg-stone-800',
-                  )}
-                >
-                  <Icon className="h-5 w-5" strokeWidth={2} />
-                </Link>
-              ))}
-            </div>
-            <div className="hidden lg:block" />
-
-            {/* Chỉ nút trang cá nhân (avatar + dropdown) */}
-            <ProfileMenu user={user} onLogout={onLogout} loggingOut={loggingOut} />
-          </div>
-        </header>
-
+      <div className="pt-16 lg:pl-18">
         <main className="mx-auto max-w-2xl px-4 py-6">{children}</main>
       </div>
     </div>
@@ -118,9 +113,9 @@ function ProfileMenu({ user, onLogout, loggingOut }: Omit<AppShellProps, 'childr
             aria-hidden
             tabIndex={-1}
             onClick={() => setOpen(false)}
-            className="fixed inset-0 z-30 cursor-default"
+            className="fixed inset-0 z-40 cursor-default"
           />
-          <div className="absolute right-0 z-40 mt-2 w-60 overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-stone-900/10 dark:border-line-dark dark:bg-surface-dark">
+          <div className="absolute right-0 z-50 mt-2 w-60 overflow-hidden rounded-2xl border border-line bg-surface shadow-xl shadow-stone-900/10 dark:border-line-dark dark:bg-surface-dark">
             <div className="flex items-center gap-3 border-b border-line px-4 py-3 dark:border-line-dark">
               <Avatar src={user?.avatarUrl} name={name} size="md" />
               <div className="min-w-0">
@@ -136,7 +131,7 @@ function ProfileMenu({ user, onLogout, loggingOut }: Omit<AppShellProps, 'childr
             <Link
               to="/profile"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 transition-colors hover:bg-canvas dark:text-stone-200 dark:hover:bg-stone-800"
+              className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 transition-colors hover:bg-canvas dark:text-stone-200 dark:hover:bg-canvas-dark"
             >
               <User className="h-4 w-4" strokeWidth={2} />
               Trang cá nhân
@@ -145,7 +140,7 @@ function ProfileMenu({ user, onLogout, loggingOut }: Omit<AppShellProps, 'childr
             <Link
               to="/settings"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 transition-colors hover:bg-canvas dark:text-stone-200 dark:hover:bg-stone-800"
+              className="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 transition-colors hover:bg-canvas dark:text-stone-200 dark:hover:bg-canvas-dark"
             >
               <Settings className="h-4 w-4" strokeWidth={2} />
               Cài đặt
