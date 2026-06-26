@@ -6,7 +6,7 @@ export function Card({ children, className }: { children: ReactNode; className?:
   return (
     <div
       className={cn(
-        'rounded-2xl border border-line bg-surface p-5 shadow-sm shadow-stone-900/5 dark:border-line-dark dark:bg-surface-dark sm:p-6',
+        'card-elev rounded-2xl bg-surface p-6 ring-1 ring-stone-900/[0.04] dark:bg-surface-dark dark:ring-white/[0.06] sm:p-7',
         className,
       )}
     >

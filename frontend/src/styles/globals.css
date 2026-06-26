@@ -50,6 +50,21 @@ body {
   color: transparent;
 }
 
+/* Bóng mềm 2 lớp ám tông gỗ — cho cảm giác tờ giấy nổi nhẹ (card). */
+.card-elev {
+  box-shadow:
+    0 1px 2px rgba(58, 48, 33, 0.04),
+    0 10px 30px -12px rgba(58, 48, 33, 0.16);
+}
+
+@media (prefers-color-scheme: dark) {
+  .card-elev {
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.3),
+      0 14px 32px -12px rgba(0, 0, 0, 0.55);
+  }
+}
+
 @keyframes rise {
   from {
     opacity: 0;
