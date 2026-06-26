@@ -15,4 +15,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p FROM Post p WHERE p.authorId IN :authorIds AND p.isHidden = false ORDER BY p.createdAt DESC")
     Page<Post> findFeedPosts(@Param("authorIds") List<Long> authorIds, Pageable pageable);
+
+    @Query("SELECT p FROM Post p WHERE p.authorId <> :userId AND p.isHidden = false ORDER BY p.createdAt DESC")
+    Page<Post> findExplore(@Param("userId") Long userId, Pageable pageable);
 }

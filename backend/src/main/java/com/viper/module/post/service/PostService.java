@@ -175,4 +175,13 @@ public class PostService {
                 .map(PostSummary::from);
         return PageResponse.from(result);
     }
+
+    /** Bài viết để khám phá: của mọi người (trừ mình), mới nhất trước. */
+    @Transactional(readOnly = true)
+    public PageResponse<PostSummary> getExplore(Long userId, int page, int size) {
+        Page<PostSummary> result = postRepository
+                .findExplore(userId, PageRequest.of(page, size))
+                .map(PostSummary::from);
+        return PageResponse.from(result);
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -44,6 +45,14 @@ public class UserController {
     @GetMapping("/suggestions")
     public ResponseEntity<List<UserSummary>> suggestions(@AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(userQueryService.getSuggestions(userId, 10));
+    }
+
+    /** Tìm người dùng theo username/tên hiển thị. */
+    @GetMapping("/search")
+    public ResponseEntity<List<UserSummary>> search(
+            @AuthenticationPrincipal Long userId,
+            @RequestParam("q") String q) {
+        return ResponseEntity.ok(userQueryService.searchUsers(q, userId, 20));
     }
 
     /** Hồ sơ người khác theo username (kèm trạng thái đã theo dõi). */

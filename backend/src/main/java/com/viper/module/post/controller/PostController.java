@@ -63,6 +63,14 @@ public class PostController {
         return ResponseEntity.ok(postService.getFeed(userId, page, size));
     }
 
+    @GetMapping("/posts/explore")
+    public ResponseEntity<PageResponse<PostSummary>> explore(
+            @AuthenticationPrincipal Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "24") int size) {
+        return ResponseEntity.ok(postService.getExplore(userId, page, size));
+    }
+
     @GetMapping("/users/{userId}/posts")
     public ResponseEntity<PageResponse<PostSummary>> userPosts(
             @PathVariable Long userId,

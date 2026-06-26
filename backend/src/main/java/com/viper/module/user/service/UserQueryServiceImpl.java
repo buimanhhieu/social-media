@@ -69,6 +69,20 @@ public class UserQueryServiceImpl implements UserQueryService {
                 .toList();
     }
 
+    @Override
+    public List<UserSummary> searchUsers(String query, Long viewerId, int limit) {
+        if (query == null || query.isBlank()) {
+            return List.of();
+        }
+        String q = query.trim();
+        return userRepository
+                .findTop20ByUsernameContainingIgnoreCaseOrDisplayNameContainingIgnoreCase(q, q).stream()
+                .filter(u -> !u.getId().equals(viewerId))
+                .limit(limit)
+                .map(u -> new UserSummary(u.getId(), u.getUsername(), u.getDisplayName(), u.getAvatarUrl()))
+                .toList();
+    }
+
     private UserProfileResponse buildProfile(User u, Long viewerId) {
         long followers = followRepository.countByFollowingId(u.getId());
         long following = followRepository.countByFollowerId(u.getId());

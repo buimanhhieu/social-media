@@ -20,6 +20,9 @@ public interface UserQueryService {
     /** Gợi ý người để theo dõi (loại bản thân + người đã theo dõi). */
     List<UserSummary> getSuggestions(Long viewerId, int limit);
 
+    /** Tìm người theo username/tên hiển thị (loại bản thân). */
+    List<UserSummary> searchUsers(String query, Long viewerId, int limit);
+
     /** Lấy nhiều summary một lần (tránh N+1 khi dựng feed/danh sách). */
     List<UserSummary> getUserSummariesByIds(List<Long> ids);
 

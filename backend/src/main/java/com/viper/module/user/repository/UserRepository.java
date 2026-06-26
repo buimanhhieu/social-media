@@ -15,4 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     /** Gợi ý người để theo dõi: loại trừ bản thân + những người đã theo dõi. */
     List<User> findTop12ByIdNotInAndIsVerifiedTrueOrderByCreatedAtDesc(Collection<Long> excludedIds);
+
+    /** Tìm người theo username hoặc tên hiển thị. */
+    List<User> findTop20ByUsernameContainingIgnoreCaseOrDisplayNameContainingIgnoreCase(
+            String username, String displayName);
 }
