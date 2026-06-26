@@ -5,6 +5,7 @@ import type {
   CreateCommentRequest,
   CreatePostRequest,
   MediaResponse,
+  MusicTrack,
   PostResponse,
   PostSummary,
 } from '../types';
@@ -46,6 +47,17 @@ export const mediaApi = {
     form.append('file', file);
     form.append('context', context);
     return apiClient.post<MediaResponse>('/api/media', form).then((r) => r.data);
+  },
+};
+
+export const musicApi = {
+  list: () => apiClient.get<MusicTrack[]>('/api/music').then((r) => r.data),
+
+  upload: (file: File, name: string) => {
+    const form = new FormData();
+    form.append('file', file);
+    form.append('name', name);
+    return apiClient.post<MusicTrack>('/api/music', form).then((r) => r.data);
   },
 };
 

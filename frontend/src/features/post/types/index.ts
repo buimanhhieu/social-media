@@ -17,6 +17,12 @@ export interface MediaResponse {
   height: number | null;
 }
 
+export interface MusicTrack {
+  id: number;
+  name: string;
+  url: string;
+}
+
 export interface PostResponse {
   id: number;
   caption: string | null;
@@ -24,6 +30,7 @@ export interface PostResponse {
   location: string | null;
   author: UserSummary;
   media: MediaItem[];
+  music: MusicTrack | null;
   likeCount: number;
   commentCount: number;
   likedByMe: boolean;
@@ -41,6 +48,7 @@ export interface CreatePostRequest {
   caption?: string;
   location?: string;
   type?: PostType;
+  musicId?: number;
 }
 
 export interface CommentResponse {

@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { commentApi, mediaApi, postApi } from './endpoints';
+import { commentApi, mediaApi, musicApi, postApi } from './endpoints';
 import type { CreateCommentRequest, CreatePostRequest } from '../types';
 
 const FEED_SIZE = 10;
@@ -40,6 +40,18 @@ export function usePost(id: number) {
 
 export function useUploadMedia() {
   return useMutation({ mutationFn: (file: File) => mediaApi.upload(file) });
+}
+
+export function useMusicList() {
+  return useQuery({ queryKey: ['music'], queryFn: musicApi.list });
+}
+
+export function useUploadMusic() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ file, name }: { file: File; name: string }) => musicApi.upload(file, name),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['music'] }),
+  });
 }
 
 export function useCreatePost() {
