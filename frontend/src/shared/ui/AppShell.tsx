@@ -76,7 +76,9 @@ export function AppShell({ children, user, onLogout, loggingOut }: AppShellProps
               )}
             >
               <Icon className="h-6 w-6 shrink-0" strokeWidth={pathname === to ? 2.4 : 2} />
-              <span className="whitespace-nowrap">{label}</span>
+              <span className="whitespace-nowrap opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                {label}
+              </span>
             </Link>
           ))}
         </nav>
