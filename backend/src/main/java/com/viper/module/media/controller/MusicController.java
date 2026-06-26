@@ -18,18 +18,44 @@ public class MusicController {
 
     private final MusicService musicService;
 
-    /** Kho nhạc dùng chung (preset + do người dùng đẩy lên). */
+    /** Khám phá: tất cả nhạc (?q= để tìm theo tên). */
     @GetMapping
-    public ResponseEntity<List<MusicResponse>> list() {
-        return ResponseEntity.ok(musicService.list());
+    public ResponseEntity<List<MusicResponse>> explore(
+            @AuthenticationPrincipal Long userId,
+            @RequestParam(value = "q", required = false) String q) {
+        return ResponseEntity.ok(musicService.explore(userId, q));
     }
 
-    /** Import nhạc từ file → lưu vào kho chung. */
+    /** Gợi ý. */
+    @GetMapping("/suggested")
+    public ResponseEntity<List<MusicResponse>> suggested(@AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(musicService.suggested(userId));
+    }
+
+    /** Đã lưu. */
+    @GetMapping("/saved")
+    public ResponseEntity<List<MusicResponse>> saved(@AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(musicService.saved(userId));
+    }
+
+    /** Import nhạc từ file audio HOẶC video (tự tách audio) → kho chung. */
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<MusicResponse> upload(
             @AuthenticationPrincipal Long userId,
             @RequestParam("file") MultipartFile file,
             @RequestParam("name") String name) {
         return ResponseEntity.status(HttpStatus.CREATED).body(musicService.upload(userId, name, file));
+    }
+
+    @PostMapping("/{id}/save")
+    public ResponseEntity<Void> save(@AuthenticationPrincipal Long userId, @PathVariable Long id) {
+        musicService.save(userId, id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}/save")
+    public ResponseEntity<Void> unsave(@AuthenticationPrincipal Long userId, @PathVariable Long id) {
+        musicService.unsave(userId, id);
+        return ResponseEntity.noContent().build();
     }
 }

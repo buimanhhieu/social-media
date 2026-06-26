@@ -10,4 +10,10 @@ public interface MusicRepository extends JpaRepository<Music, Long> {
     List<Music> findAllByOrderByCreatedAtDesc();
 
     List<Music> findByIdIn(List<Long> ids);
+
+    List<Music> findTop20ByOrderByCreatedAtDesc();
+
+    List<Music> findTop50ByOrderByCreatedAtDesc();
+
+    List<Music> findTop50ByNameContainingIgnoreCaseOrderByCreatedAtDesc(String name);
 }
