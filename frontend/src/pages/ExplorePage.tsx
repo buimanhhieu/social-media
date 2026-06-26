@@ -4,6 +4,7 @@ import { Search, X } from 'lucide-react';
 import { AppShell } from '@shared/ui/AppShell';
 import { Avatar } from '@shared/ui/Avatar';
 import { Button } from '@shared/ui/Button';
+import { Card } from '@shared/ui/Card';
 import { useAuthStore, useLogout } from '@features/auth';
 import { useCurrentUser, useFollow, useSearchUsers, useSuggestions } from '@features/user';
 import { useExplore } from '@features/post';
@@ -34,6 +35,7 @@ export function ExplorePage() {
       loggingOut={logout.isPending}
       onLogout={() => logout.mutate(undefined, { onSettled: () => navigate('/login') })}
     >
+      <Card>
       {/* Ô tìm người */}
       <div className="relative mb-6">
         <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
@@ -131,6 +133,7 @@ export function ExplorePage() {
           </section>
         </>
       )}
+      </Card>
     </AppShell>
   );
 }

@@ -1,6 +1,7 @@
 import { type ChangeEvent, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, ImagePlus, Music as MusicIcon, Plus, X } from 'lucide-react';
 import { Button } from '@shared/ui/Button';
+import { Card } from '@shared/ui/Card';
 import { Input } from '@shared/ui/Input';
 import { cn } from '@shared/lib/cn';
 import { bakeImage } from '@shared/lib/bakeImage';
@@ -109,7 +110,7 @@ export function CreatePostWizard({ onCreated }: { onCreated?: () => void }) {
   const current = images[active];
 
   return (
-    <div className="mx-auto max-w-md">
+    <Card className="mx-auto max-w-md">
       {/* Header bước */}
       <div className="mb-5 flex items-center justify-between">
         {step > 1 ? (
@@ -304,7 +305,7 @@ export function CreatePostWizard({ onCreated }: { onCreated?: () => void }) {
           onClose={() => setMusicOpen(false)}
         />
       )}
-    </div>
+    </Card>
   );
 }
 

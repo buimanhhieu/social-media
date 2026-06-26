@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { AppShell } from '@shared/ui/AppShell';
 import { Avatar } from '@shared/ui/Avatar';
 import { Button } from '@shared/ui/Button';
+import { Card } from '@shared/ui/Card';
 import { Input } from '@shared/ui/Input';
 import { Toggle } from '@shared/ui/Toggle';
 import { getFriendlyMessage } from '@shared/api/errors';
@@ -90,7 +91,8 @@ export function SettingsPage() {
       loggingOut={logout.isPending}
       onLogout={() => logout.mutate(undefined, { onSettled: () => navigate('/login') })}
     >
-      <form onSubmit={onSave} className="mx-auto max-w-md space-y-6">
+      <Card className="mx-auto max-w-md">
+        <form onSubmit={onSave} className="space-y-6">
         <h1 className="text-xl font-bold tracking-tight text-stone-900 dark:text-white">
           Chỉnh sửa trang cá nhân
         </h1>
@@ -168,7 +170,8 @@ export function SettingsPage() {
             Huỷ
           </Button>
         </div>
-      </form>
+        </form>
+      </Card>
     </AppShell>
   );
 }
