@@ -348,17 +348,24 @@ function MusicPicker({ musicId, onSelect }: { musicId: number | null; onSelect: 
 
       {importing && (
         <div className="mb-3 space-y-2 rounded-xl border border-line p-3 dark:border-line-dark">
-          <input ref={musicFileRef} type="file" accept="audio/*" hidden onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+          <input
+            ref={musicFileRef}
+            type="file"
+            accept="audio/*,video/*"
+            hidden
+            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+          />
           <button
             type="button"
             onClick={() => musicFileRef.current?.click()}
             className="w-full rounded-lg border border-dashed border-line px-3 py-2 text-sm text-stone-600 hover:border-accent dark:border-line-dark dark:text-stone-300"
           >
-            {file ? file.name : 'Chọn file nhạc…'}
+            {file ? file.name : 'Chọn file nhạc hoặc video…'}
           </button>
+          <p className="text-xs text-stone-400">Chọn video thì hệ thống sẽ tự tách phần âm thanh.</p>
           <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Tên bài nhạc" maxLength={150} />
           <Button size="sm" fullWidth disabled={!file || !name.trim() || uploadMusic.isPending} onClick={doImport}>
-            {uploadMusic.isPending ? 'Đang tải lên…' : 'Tải lên & chọn'}
+            {uploadMusic.isPending ? 'Đang xử lý…' : 'Tải lên & chọn'}
           </Button>
         </div>
       )}
